@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 
 class DefaultTitle extends StatelessWidget {
   final String title;
+  final String menu;
   final bool? showSubtitle;
-  const DefaultTitle(this.title, {Key? key, this.showSubtitle = true})
+  const DefaultTitle(this.title,
+      {Key? key, this.showSubtitle = true, required this.menu})
       : super(key: key);
 
   @override
@@ -24,7 +26,7 @@ class DefaultTitle extends StatelessWidget {
           ),
           Visibility(
             visible: showSubtitle!,
-            child: Text("Home / $title"),
+            child: Text("$menu / $title"),
           ),
         ],
       ),

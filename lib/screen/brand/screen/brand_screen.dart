@@ -1,29 +1,35 @@
-import 'package:fl_wms/main_layout/main_layout.dart';
+import 'package:fl_wms/widget/default_title.dart';
 import 'package:flutter/material.dart';
-// import 'package:go_router/go_router.dart';
 
-// ignore: must_be_immutable
-class BrandScreen extends MainLayout {
-  BrandScreen({Key? key})
-      : super(
-          key: key,
-          title: "Brand",
-          menu: "Master",
-          showSubtitle: false,
-        );
+class BrandScreen extends StatefulWidget {
+  const BrandScreen({super.key});
 
   @override
-  BrandScreenState createState() => BrandScreenState();
+  State<BrandScreen> createState() => _BrandScreenState();
 }
 
-class BrandScreenState extends MainLayoutState<BrandScreen> {
+class _BrandScreenState extends State<BrandScreen> {
   @override
-  Widget body() {
-    return Text(
-      "Brand",
-      style: Theme.of(context).textTheme.displayLarge,
-      overflow: TextOverflow.visible,
-      softWrap: false,
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.only(top: 8.0),
+        child: Column(
+          children: [
+            const DefaultTitle(
+              "Brand",
+              menu: "Master",
+            ),
+            const Divider(height: 1),
+            Card(
+              child: DataTable(columns: const [
+                DataColumn(label: Text("No")),
+                DataColumn(label: Text("Brand")),
+              ], rows: const []),
+            )
+          ],
+        ),
+      ),
     );
   }
 }

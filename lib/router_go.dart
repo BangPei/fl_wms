@@ -1,7 +1,6 @@
-import 'package:fl_wms/home_screen.dart';
+import 'package:fl_wms/screen/dashboard/screen/dashboard_screen.dart';
 import 'package:fl_wms/main_layout/parent_layout.dart';
 import 'package:fl_wms/screen/brand/screen/brand_screen.dart';
-import 'package:fl_wms/screen/brand/screen/brand_screen2.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -19,41 +18,26 @@ class RouteNavigation {
         builder: (BuildContext context, GoRouterState state, Widget child) {
           return ParentLayout(child: child);
         },
+        pageBuilder: (context, state, child) {
+          return NoTransitionPage(child: ParentLayout(child: child));
+        },
         routes: [
           GoRoute(
+            parentNavigatorKey: _shellNavigatorKey,
             path: '/',
-            builder: (BuildContext context, GoRouterState state) {
-              return const DashboardScreen();
+            pageBuilder: (context, state) {
+              return const NoTransitionPage(
+                child: DashboardScreen(),
+              );
             },
           ),
           GoRoute(
+            parentNavigatorKey: _shellNavigatorKey,
             path: '/brand',
-            builder: (BuildContext context, GoRouterState state) {
-              return const BrandScreen2();
-            },
-            // routes: <RouteBase>[
-            //   GoRoute(
-            //     path: 'brand',
-            //     pageBuilder: (context, state) {
-            //       return CustomTransitionPage(
-            //         key: state.pageKey,
-            //         child: BrandScreen(),
-            //         transitionsBuilder:
-            //             (context, animation, secondaryAnimation, child) {
-            //           return FadeTransition(
-            //             opacity: CurveTween(curve: Curves.easeInOutCirc)
-            //                 .animate(animation),
-            //           );
-            //         },
-            //       );
-            //     },
-            //   ),
-            // ],
-          ),
-          GoRoute(
-            path: '/category',
-            builder: (BuildContext context, GoRouterState state) {
-              return BrandScreen();
+            pageBuilder: (context, state) {
+              return const NoTransitionPage(
+                child: BrandScreen(),
+              );
             },
             // routes: <RouteBase>[
             //   GoRoute(

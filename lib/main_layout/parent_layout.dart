@@ -81,11 +81,7 @@ class _ParentLayoutState extends State<ParentLayout> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const TopNavbar(),
-                    Expanded(
-                      child: SingleChildScrollView(
-                        child: widget.child,
-                      ),
-                    ),
+                    Expanded(child: widget.child),
                   ],
                 ),
               ),
