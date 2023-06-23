@@ -18,9 +18,9 @@ class RouteNavigation {
         builder: (BuildContext context, GoRouterState state, Widget child) {
           return ParentLayout(child: child);
         },
-        pageBuilder: (context, state, child) {
-          return NoTransitionPage(child: ParentLayout(child: child));
-        },
+        // pageBuilder: (context, state, child) {
+        //   return NoTransitionPage(child: ParentLayout(child: child));
+        // },
         routes: [
           GoRoute(
             parentNavigatorKey: _shellNavigatorKey,
@@ -39,6 +39,19 @@ class RouteNavigation {
                 child: BrandScreen(),
               );
             },
+            // pageBuilder: (context, state) {
+            //   return CustomTransitionPage(
+            //     // key: state.pageKey,
+            //     child: const BrandScreen(),
+            //     transitionsBuilder:
+            //         (context, animation, secondaryAnimation, child) {
+            //       return FadeTransition(
+            //         opacity: CurveTween(curve: Curves.easeInOutCirc)
+            //             .animate(animation),
+            //       );
+            //     },
+            //   );
+            // },
             // routes: <RouteBase>[
             //   GoRoute(
             //     path: 'brand',

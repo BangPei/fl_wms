@@ -38,6 +38,7 @@ dependencies:
   font_awesome_flutter: ^10.4.0
   jiffy: ^6.2.1
   get_it: ^7.6.0
+  pluto_grid: ^7.0.2
   flutter:
     sdk: flutter
 
