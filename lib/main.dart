@@ -1,6 +1,8 @@
 import 'package:fl_wms/library/interceptor/injector.dart';
+import 'package:fl_wms/screen/brand/bloc/brand_bloc.dart';
 import 'package:fl_wms/service/router_go.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:url_strategy/url_strategy.dart';
 
 void main() {
@@ -13,9 +15,14 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key});
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      debugShowCheckedModeBanner: false,
-      routerConfig: RouteNavigation.router,
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<BrandBloc>(create: (__) => BrandBloc()),
+      ],
+      child: MaterialApp.router(
+        debugShowCheckedModeBanner: false,
+        routerConfig: RouteNavigation.router,
+      ),
     );
   }
 }

@@ -39,6 +39,9 @@ dependencies:
   jiffy: ^6.2.1
   get_it: ^7.6.0
   pluto_grid: ^7.0.2
+  reactive_forms: ^15.0.0
+  flutter_advanced_switch: ^3.0.1
+  shimmer: ^3.0.0
   flutter:
     sdk: flutter
 

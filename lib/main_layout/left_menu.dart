@@ -203,6 +203,50 @@ class MainMenu extends StatelessWidget {
         ),
         LeftExpantionTile(
           visibility: size > 60,
+          title: "Customer",
+          icon: FontAwesomeIcons.bullseye,
+          // expanded: true,
+          children: size > 60
+              ? [
+                  LeftListTile(
+                    // selected: true,
+                    title: "Management Customer",
+                    // icon: FontAwesomeIcons.circle,
+                    onTap: () {},
+                  ),
+                  LeftListTile(
+                    selected: false,
+                    title: "Add Cutomer",
+                    // icon: FontAwesomeIcons.toolbox,
+                    onTap: () {},
+                  ),
+                ]
+              : [],
+        ),
+        LeftExpantionTile(
+          visibility: size > 60,
+          title: "Supplier",
+          icon: FontAwesomeIcons.downLeftAndUpRightToCenter,
+          // expanded: true,
+          children: size > 60
+              ? [
+                  LeftListTile(
+                    // selected: true,
+                    title: "Management Supplier",
+                    // icon: FontAwesomeIcons.circle,
+                    onTap: () {},
+                  ),
+                  LeftListTile(
+                    selected: false,
+                    title: "Add Supplier",
+                    // icon: FontAwesomeIcons.toolbox,
+                    onTap: () {},
+                  ),
+                ]
+              : [],
+        ),
+        LeftExpantionTile(
+          visibility: size > 60,
           title: "Product",
           icon: FontAwesomeIcons.productHunt,
           // expanded: true,
@@ -283,6 +327,12 @@ class MainMenu extends StatelessWidget {
                   LeftListTile(
                     selected: false,
                     title: "Tracking",
+                    // icon: FontAwesomeIcons.toolbox,
+                    onTap: () {},
+                  ),
+                  LeftListTile(
+                    selected: false,
+                    title: "Product Moving",
                     // icon: FontAwesomeIcons.toolbox,
                     onTap: () {},
                   ),

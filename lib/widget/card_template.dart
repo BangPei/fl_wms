@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bootstrap_widgets/bootstrap_widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class CardTemplate extends StatelessWidget {
   final String title;
-  final Color? color;
   final Widget? content;
   final VoidCallback? onPressed;
   final bool? showAddButton;
   const CardTemplate({
-    this.color,
     required this.title,
     this.content,
     Key? key,
@@ -35,7 +34,11 @@ class CardTemplate extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            DefaultCardTitle(title, showAddButton: showAddButton),
+            DefaultCardTitle(
+              title,
+              showAddButton: showAddButton,
+              onPressed: onPressed,
+            ),
             content ?? const SizedBox.shrink(),
           ],
         ),
@@ -47,9 +50,14 @@ class CardTemplate extends StatelessWidget {
 class DefaultCardTitle extends StatelessWidget {
   final String title;
   final bool? showAddButton;
+  final VoidCallback? onPressed;
 
-  const DefaultCardTitle(this.title, {Key? key, this.showAddButton})
-      : super(key: key);
+  const DefaultCardTitle(
+    this.title, {
+    Key? key,
+    this.showAddButton,
+    this.onPressed,
+  }) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -59,9 +67,9 @@ class DefaultCardTitle extends StatelessWidget {
         children: [
           Text(
             title,
-            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
           ),
-          ActionAddButton(onPressed: () {}, showAddButton: showAddButton),
+          ActionAddButton(onPressed: onPressed, showAddButton: showAddButton),
         ],
       ),
     );
@@ -78,28 +86,23 @@ class ActionAddButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Visibility(
       visible: showAddButton ?? false,
-      child: MaterialButton(
-        minWidth: 100,
-        height: 40,
+      child: BootstrapButton(
+        type: BootstrapButtonType.primary,
         onPressed: onPressed,
-        color: const Color.fromARGB(255, 84, 106, 230),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(5),
-        ),
         child: const Row(
           children: [
-            FaIcon(FontAwesomeIcons.plus, color: Colors.white, size: 15),
-            SizedBox(width: 1),
-            Text(
-              "Add Data",
-              style: TextStyle(
-                // fontWeight: FontWeight.w600,
-                fontSize: 13,
-                color: Colors.white,
-              ),
-            )
+            FaIcon(
+              FontAwesomeIcons.circlePlus,
+              color: Colors.white,
+              size: 20,
+            ),
+            SizedBox(width: 5),
+            Text('Add Data'),
           ],
         ),
+        // onLongPress: _onLongPressed,
+        // onHover: _onHover,
+        // onFocusChange: _onFocusChange,
       ),
     );
   }

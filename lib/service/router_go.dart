@@ -18,9 +18,6 @@ class RouteNavigation {
         builder: (BuildContext context, GoRouterState state, Widget child) {
           return ParentLayout(child: child);
         },
-        // pageBuilder: (context, state, child) {
-        //   return NoTransitionPage(child: ParentLayout(child: child));
-        // },
         routes: [
           GoRoute(
             parentNavigatorKey: _shellNavigatorKey,
@@ -35,8 +32,10 @@ class RouteNavigation {
             parentNavigatorKey: _shellNavigatorKey,
             path: '/brand',
             pageBuilder: (context, state) {
-              return const NoTransitionPage(
-                child: BrandScreen(),
+              print(state.path);
+              return NoTransitionPage(
+                arguments: {"name": state.path},
+                child: const BrandScreen(),
               );
             },
             // pageBuilder: (context, state) {
