@@ -23,7 +23,7 @@ class BrandBloc extends Bloc<BrandEvent, BrandState> {
   }
 
   void _postBrand(PostBrand event, Emitter<BrandState> emit) async {
-    emit(BrandLoadingState());
+    // emit(BrandLoadingState());
     try {
       await BrandApi.postBrand(event.brand);
       List<Brand> brands = await BrandApi.getBrands();

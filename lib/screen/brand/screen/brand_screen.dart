@@ -1,14 +1,13 @@
 import 'package:fl_wms/library/common.dart';
 import 'package:fl_wms/screen/brand/bloc/brand_bloc.dart';
 import 'package:fl_wms/screen/brand/data/brand.dart';
+import 'package:fl_wms/screen/brand/data/brand_source.dart';
 import 'package:fl_wms/widget/card_template.dart';
 import 'package:fl_wms/widget/loading_shimmer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_advanced_switch/flutter_advanced_switch.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bootstrap_widgets/bootstrap_widgets.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:pluto_grid/pluto_grid.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 class BrandScreen extends StatefulWidget {
@@ -19,60 +18,6 @@ class BrandScreen extends StatefulWidget {
 }
 
 class _BrandScreenState extends State<BrandScreen> {
-  final List<PlutoColumn> _columns = [
-    PlutoColumn(
-      title: 'NO',
-      field: 'id',
-      type: PlutoColumnType.number(),
-      readOnly: true,
-      width: 50,
-      titleTextAlign: PlutoColumnTextAlign.center,
-    ),
-    PlutoColumn(
-      title: 'Brand',
-      field: 'name',
-      type: PlutoColumnType.text(),
-      readOnly: true,
-      titleTextAlign: PlutoColumnTextAlign.center,
-    ),
-    PlutoColumn(
-      title: 'Created',
-      field: 'createdAt',
-      type: PlutoColumnType.date(format: "dd MMM yyyy HH:mm:ss"),
-      readOnly: true,
-      textAlign: PlutoColumnTextAlign.center,
-      titleTextAlign: PlutoColumnTextAlign.center,
-    ),
-    PlutoColumn(
-      title: 'Updated',
-      field: 'updatedAt',
-      type: PlutoColumnType.date(format: "dd MMM yyyy HH:mm:ss"),
-      readOnly: true,
-      textAlign: PlutoColumnTextAlign.center,
-      titleTextAlign: PlutoColumnTextAlign.center,
-    ),
-    PlutoColumn(
-      title: 'Status',
-      field: 'isActive',
-      type: PlutoColumnType.text(),
-      readOnly: true,
-      textAlign: PlutoColumnTextAlign.center,
-      titleTextAlign: PlutoColumnTextAlign.center,
-    ),
-    PlutoColumn(
-      title: '',
-      field: 'action',
-      type: PlutoColumnType.number(),
-      readOnly: true,
-      width: 80,
-      titleTextAlign: PlutoColumnTextAlign.center,
-      renderer: (plutoContext) {
-        return const Center(child: FaIcon(FontAwesomeIcons.eye));
-      },
-    ),
-  ];
-
-  late PlutoGridStateManager stateManager;
   bool isLoading = false;
 
   bool isActive = true;
@@ -84,6 +29,7 @@ class _BrandScreenState extends State<BrandScreen> {
     'is_active': FormControl<bool>(value: true)
   });
   final _controller = ValueNotifier<bool>(true);
+  var rowsPerPage = PaginatedDataTable.defaultRowsPerPage;
 
   @override
   void initState() {
@@ -103,68 +49,47 @@ class _BrandScreenState extends State<BrandScreen> {
           return const LoadingShimmer();
         } else if (state is BrandDataState) {
           return SingleChildScrollView(
-            child: CardTemplate(
-              title: "Brand",
-              showAddButton: true,
-              showShimmer: false,
-              onPressed: _openModal,
-              content: SizedBox(
-                height: 400,
-                child: PlutoGrid(
-                  columns: _columns,
-                  rows: state.brands.map((e) {
-                    int idx = state.brands.indexOf(e);
-                    return PlutoRow(
-                      cells: {
-                        'id': PlutoCell(value: idx + 1),
-                        'name': PlutoCell(value: e.name),
-                        'createdAt': PlutoCell(value: e.createdAt),
-                        'updatedAt': PlutoCell(value: e.updatedAt),
-                        'isActive': PlutoCell(
-                            value: (e.isActive ?? false)
-                                ? "Aktif"
-                                : "Tidak Aktif"),
-                        'action': PlutoCell(),
-                      },
-                    );
-                  }).toList(),
-                  onLoaded: (PlutoGridOnLoadedEvent event) {
-                    stateManager = event.stateManager;
-                    // ignore: avoid_print
-                    print(event);
-                  },
-                  onChanged: (PlutoGridOnChangedEvent event) {
-                    // ignore: avoid_print
-                    print(event);
-                  },
-                  createFooter: (stateManager) {
-                    return PlutoPagination(stateManager, pageSizeToMove: 10);
-                  },
-                  configuration: PlutoGridConfiguration(
-                    style: PlutoGridStyleConfig(
-                      rowHeight: 30,
-                      columnHeight: 30,
-                      enableGridBorderShadow: true,
-                      iconColor: Colors.blue[300]!,
-                      borderColor: Colors.grey.withOpacity(0.5),
-                      gridBorderRadius: BorderRadius.circular(6),
-                      cellTextStyle: TextStyle(
-                        fontSize: 13,
-                        color: Colors.black.withOpacity(0.8),
-                        fontWeight: FontWeight.normal,
-                      ),
-                      columnTextStyle: TextStyle(
-                        fontSize: 13,
-                        color: Colors.black.withOpacity(0.8),
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    columnSize: const PlutoGridColumnSizeConfig(
-                      autoSizeMode: PlutoAutoSizeMode.scale,
-                    ),
-                  ),
-                ),
+            padding: const EdgeInsets.only(top: 15),
+            child: PaginatedDataTable(
+              showCheckboxColumn: false,
+              showFirstLastButtons: true,
+              availableRowsPerPage: const [1, 5, 10, 50],
+              rowsPerPage: (state.brands.length < rowsPerPage)
+                  ? state.brands.length
+                  : rowsPerPage,
+              header: DefaultCardTitle(
+                "Brand",
+                onPressed: _openModal,
+                showAddButton: true,
               ),
+              columns: const [
+                DataColumn(
+                  label: Text("No"),
+                ),
+                DataColumn(
+                  label: Text("Brand"),
+                ),
+                DataColumn(
+                  label: Text("Status"),
+                ),
+                DataColumn(
+                  label: Text("Action"),
+                ),
+              ],
+              source: BrandSource(
+                state.brands,
+                onViewRowSelect: (i) {},
+              ),
+              onPageChanged: (value) {
+                int length = (state.brands).length;
+                int result = length - value;
+                rowsPerPage = result < rowsPerPage
+                    ? result
+                    : PaginatedDataTable.defaultRowsPerPage;
+                // print(rowsPerPage);
+                print(value);
+                setState(() {});
+              },
             ),
           );
         } else {
