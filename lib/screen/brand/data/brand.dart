@@ -19,9 +19,7 @@ class Brand {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;
     data['name'] = name;
-    data['is_active'] = isActive;
-    data['created_at'] = createdAt;
-    data['updated_at'] = updatedAt;
+    data['is_active'] = (isActive == true) ? 1 : 0;
     return data;
   }
 }

@@ -7,12 +7,14 @@ class CardTemplate extends StatelessWidget {
   final Widget? content;
   final VoidCallback? onPressed;
   final bool? showAddButton;
+  final bool? showShimmer;
   const CardTemplate({
     required this.title,
     this.content,
     Key? key,
     this.onPressed,
     this.showAddButton,
+    this.showShimmer,
   }) : super(key: key);
 
   @override

@@ -15,7 +15,7 @@ abstract class RestClient {
   Future<Brand> getBrand(@Path() int id);
 
   @POST("brand")
-  Future<dynamic> postBrand(@Body() Brand brand);
+  Future postBrand(@Body() Brand brand);
 
   @PUT("brand/{id}")
   Future putBrand(@Path() int id, @Body() Brand brand);

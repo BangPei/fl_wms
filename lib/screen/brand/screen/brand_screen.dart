@@ -2,6 +2,7 @@ import 'package:fl_wms/library/common.dart';
 import 'package:fl_wms/screen/brand/bloc/brand_bloc.dart';
 import 'package:fl_wms/screen/brand/data/brand.dart';
 import 'package:fl_wms/widget/card_template.dart';
+import 'package:fl_wms/widget/loading_shimmer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_advanced_switch/flutter_advanced_switch.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,7 +10,6 @@ import 'package:flutter_bootstrap_widgets/bootstrap_widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pluto_grid/pluto_grid.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:shimmer/shimmer.dart';
 
 class BrandScreen extends StatefulWidget {
   const BrandScreen({super.key});
@@ -38,7 +38,7 @@ class _BrandScreenState extends State<BrandScreen> {
     PlutoColumn(
       title: 'Created',
       field: 'createdAt',
-      type: PlutoColumnType.date(format: "dd-MMM-yyyy"),
+      type: PlutoColumnType.date(format: "dd MMM yyyy HH:mm:ss"),
       readOnly: true,
       textAlign: PlutoColumnTextAlign.center,
       titleTextAlign: PlutoColumnTextAlign.center,
@@ -46,7 +46,7 @@ class _BrandScreenState extends State<BrandScreen> {
     PlutoColumn(
       title: 'Updated',
       field: 'updatedAt',
-      type: PlutoColumnType.date(format: "dd-MMM-yyyy"),
+      type: PlutoColumnType.date(format: "dd MMM yyyy HH:mm:ss"),
       readOnly: true,
       textAlign: PlutoColumnTextAlign.center,
       titleTextAlign: PlutoColumnTextAlign.center,
@@ -67,13 +67,12 @@ class _BrandScreenState extends State<BrandScreen> {
       width: 80,
       titleTextAlign: PlutoColumnTextAlign.center,
       renderer: (plutoContext) {
-        return const FaIcon(FontAwesomeIcons.eye);
+        return const Center(child: FaIcon(FontAwesomeIcons.eye));
       },
     ),
   ];
 
   late PlutoGridStateManager stateManager;
-  List<Brand> brands = [];
   bool isLoading = false;
 
   bool isActive = true;
@@ -82,7 +81,7 @@ class _BrandScreenState extends State<BrandScreen> {
       value: '',
       validators: [Validators.required],
     ),
-    'isActive': FormControl<bool>(value: true)
+    'is_active': FormControl<bool>(value: true)
   });
   final _controller = ValueNotifier<bool>(true);
 
@@ -90,9 +89,9 @@ class _BrandScreenState extends State<BrandScreen> {
   void initState() {
     _controller.addListener(() {
       isActive = _controller.value;
-      formgroup.control('isActive').value = isActive;
+      formgroup.control('is_active').value = isActive;
     });
-    context.read<BrandBloc>().add(GetBrands());
+    context.read<BrandBloc>().add(const GetBrands());
     super.initState();
   }
 
@@ -101,28 +100,20 @@ class _BrandScreenState extends State<BrandScreen> {
     return BlocBuilder<BrandBloc, BrandState>(
       builder: (context, state) {
         if (state is BrandLoadingState) {
-          return Shimmer.fromColors(
-            baseColor: Colors.grey[300]!,
-            highlightColor: Colors.grey[100]!,
-            child: const SizedBox(
-              height: 200,
-              child: CardTemplate(
-                title: "Loading Data",
-              ),
-            ),
-          );
+          return const LoadingShimmer();
         } else if (state is BrandDataState) {
           return SingleChildScrollView(
             child: CardTemplate(
               title: "Brand",
               showAddButton: true,
+              showShimmer: false,
               onPressed: _openModal,
               content: SizedBox(
-                height: 200,
+                height: 400,
                 child: PlutoGrid(
                   columns: _columns,
-                  rows: brands.map((e) {
-                    int idx = brands.indexOf(e);
+                  rows: state.brands.map((e) {
+                    int idx = state.brands.indexOf(e);
                     return PlutoRow(
                       cells: {
                         'id': PlutoCell(value: idx + 1),
@@ -147,7 +138,7 @@ class _BrandScreenState extends State<BrandScreen> {
                     print(event);
                   },
                   createFooter: (stateManager) {
-                    return PlutoPagination(stateManager);
+                    return PlutoPagination(stateManager, pageSizeToMove: 10);
                   },
                   configuration: PlutoGridConfiguration(
                     style: PlutoGridStyleConfig(
@@ -189,7 +180,8 @@ class _BrandScreenState extends State<BrandScreen> {
       BootstrapModalSize.medium,
       title: "Add Brand",
       onSave: () {
-        print(formgroup.value);
+        Brand brand = Brand.fromJson(formgroup.value);
+        context.read<BrandBloc>().add(PostBrand(brand));
       },
       content: ReactiveForm(
         formGroup: formgroup,

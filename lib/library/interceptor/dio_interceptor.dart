@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'injector.dart';
 import 'navigation_service.dart';
 
-class DioInterceptors extends InterceptorsWrapper {
+class DioInterceptors extends Interceptor {
   final Dio dio;
   DioInterceptors(this.dio);
   final NavigationService _nav = locator<NavigationService>();

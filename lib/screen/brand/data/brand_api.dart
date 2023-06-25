@@ -14,7 +14,7 @@ class BrandApi {
     return data;
   }
 
-  static Future<Brand> postBrand(Brand brand) async {
+  static Future postBrand(Brand brand) async {
     final client = await Api.restClient();
     var data = client.postBrand(brand);
     return data;

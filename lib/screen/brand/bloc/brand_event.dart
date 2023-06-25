@@ -6,5 +6,10 @@ abstract class BrandEvent {
 }
 
 class GetBrands extends BrandEvent {
-  List<Object?> get props => [];
+  const GetBrands();
+}
+
+class PostBrand extends BrandEvent {
+  final Brand brand;
+  const PostBrand(this.brand);
 }

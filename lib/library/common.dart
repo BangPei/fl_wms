@@ -8,7 +8,7 @@ class Common {
     BootstrapModalSize size, {
     required String title,
     Widget? content,
-    final VoidCallback? onSave,
+    VoidCallback? onSave,
   }) async {
     await showDialog(
       context: context,
@@ -30,7 +30,10 @@ class Common {
             ),
             BootstrapButton(
               type: BootstrapButtonType.primary,
-              onPressed: onSave,
+              onPressed: () {
+                Navigator.of(context).pop();
+                onSave!();
+              },
               child: const Text('Save'),
             ),
           ],
