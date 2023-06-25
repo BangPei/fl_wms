@@ -185,14 +185,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.3.1"
-  data_table_2:
-    dependency: "direct main"
-    description:
-      name: data_table_2
-      sha256: d124747f10b12cdfe5c46f6ee5fd5da896be7245b4fd8a46015a6283e31176d9
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.5.3"
   dio:
     dependency: "direct main"
     description:
@@ -275,6 +267,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_web_data_table:
+    dependency: "direct main"
+    description:
+      name: flutter_web_data_table
+      sha256: a059dad7673dcec32905ec1de5e92dab7c3a4d0b6bf7ddc1ad082c679dc48498
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
   flutter_web_plugins:
     dependency: transitive
     description: flutter
@@ -687,4 +687,4 @@ packages:
     version: "3.1.2"
 sdks:
   dart: ">=3.0.5 <4.0.0"
-  flutter: ">=3.10.0"
+  flutter: ">=3.3.0"

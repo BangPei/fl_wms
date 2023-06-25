@@ -31,10 +31,11 @@ class RouteNavigation {
           GoRoute(
             parentNavigatorKey: _shellNavigatorKey,
             path: '/brand',
+            name: "brand",
             pageBuilder: (context, state) {
-              print(state.path);
               return NoTransitionPage(
                 arguments: {"name": state.path},
+                name: "brand",
                 child: const BrandScreen(),
               );
             },

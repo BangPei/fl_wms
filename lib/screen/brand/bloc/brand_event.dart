@@ -13,3 +13,8 @@ class PostBrand extends BrandEvent {
   final Brand brand;
   const PostBrand(this.brand);
 }
+
+class PutBrand extends BrandEvent {
+  final Brand brand;
+  const PutBrand(this.brand);
+}

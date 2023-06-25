@@ -48,48 +48,47 @@ class _BrandScreenState extends State<BrandScreen> {
         if (state is BrandLoadingState) {
           return const LoadingShimmer();
         } else if (state is BrandDataState) {
-          return SingleChildScrollView(
-            padding: const EdgeInsets.only(top: 15),
-            child: PaginatedDataTable(
-              showCheckboxColumn: false,
-              showFirstLastButtons: true,
-              availableRowsPerPage: const [1, 5, 10, 50],
-              rowsPerPage: (state.brands.length < rowsPerPage)
-                  ? state.brands.length
-                  : rowsPerPage,
-              header: DefaultCardTitle(
-                "Brand",
-                onPressed: _openModal,
-                showAddButton: true,
+          return Padding(
+            padding: const EdgeInsets.only(top: 13),
+            child: SingleChildScrollView(
+              child: PaginatedDataTable(
+                dataRowMaxHeight: 35,
+                dataRowMinHeight: 20,
+                showCheckboxColumn: false,
+                showFirstLastButtons: true,
+                availableRowsPerPage: const [1, 5, 10, 50],
+                rowsPerPage: rowsPerPage,
+                primary: true,
+                header: DefaultCardTitle(
+                  "Brand",
+                  onPressed: _openModal,
+                  showAddButton: true,
+                ),
+                columns: const [
+                  DataColumn(
+                    label: Text("No"),
+                  ),
+                  DataColumn(
+                    label: Text("Brand"),
+                  ),
+                  DataColumn(
+                    label: Text("Status"),
+                  ),
+                  DataColumn(
+                    label: Text("Action"),
+                  ),
+                ],
+                source: BrandSource(
+                  state.brands,
+                  onViewRowSelect: (i) => _openModal(brand: i),
+                ),
+                onPageChanged: (value) {
+                  rowsPerPage = value;
+                },
+                onRowsPerPageChanged: (n) => setState(() {
+                  rowsPerPage = n!;
+                }),
               ),
-              columns: const [
-                DataColumn(
-                  label: Text("No"),
-                ),
-                DataColumn(
-                  label: Text("Brand"),
-                ),
-                DataColumn(
-                  label: Text("Status"),
-                ),
-                DataColumn(
-                  label: Text("Action"),
-                ),
-              ],
-              source: BrandSource(
-                state.brands,
-                onViewRowSelect: (i) {},
-              ),
-              onPageChanged: (value) {
-                int length = (state.brands).length;
-                int result = length - value;
-                rowsPerPage = result < rowsPerPage
-                    ? result
-                    : PaginatedDataTable.defaultRowsPerPage;
-                // print(rowsPerPage);
-                print(value);
-                setState(() {});
-              },
             ),
           );
         } else {
@@ -99,14 +98,24 @@ class _BrandScreenState extends State<BrandScreen> {
     );
   }
 
-  Future<dynamic> _openModal() async {
+  Future _openModal({Brand? brand}) async {
+    if (brand != null) {
+      formgroup.control("name").value = brand.name;
+      _controller.value = brand.isActive!;
+      formgroup.control('is_active').value = brand.isActive;
+    }
     await Common.modalBootstrapt(
       context,
       BootstrapModalSize.medium,
       title: "Add Brand",
       onSave: () {
-        Brand brand = Brand.fromJson(formgroup.value);
-        context.read<BrandBloc>().add(PostBrand(brand));
+        Brand newBrand = Brand.fromJson(formgroup.value);
+        if (brand != null) {
+          newBrand.id = brand.id;
+          context.read<BrandBloc>().add(PutBrand(newBrand));
+        } else {
+          context.read<BrandBloc>().add(PostBrand(newBrand));
+        }
       },
       content: ReactiveForm(
         formGroup: formgroup,
