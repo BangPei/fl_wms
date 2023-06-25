@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:fl_wms/library/common.dart';
 import 'package:fl_wms/screen/brand/bloc/brand_bloc.dart';
 import 'package:fl_wms/screen/brand/data/brand.dart';
@@ -33,6 +34,7 @@ class _BrandScreenState extends State<BrandScreen> {
 
   @override
   void initState() {
+    loadServerside();
     _controller.addListener(() {
       isActive = _controller.value;
       formgroup.control('is_active').value = isActive;
@@ -96,6 +98,34 @@ class _BrandScreenState extends State<BrandScreen> {
         }
       },
     );
+  }
+
+  loadServerside() async {
+    Map<String, dynamic> param = {
+      "draw": 1,
+      "columns[0][data]": "name",
+      "columns[0][searchable]": true,
+      "columns[0][orderable]": true,
+      "columns[0][search][value]": "",
+      "columns[0][search][regex]": false,
+      "columns[1][data]": "is_active",
+      "columns[1][searchable]": true,
+      "columns[1][orderable]": true,
+      "columns[1][search][value]": "",
+      "columns[1][search][regex]": false,
+      "columns[2][data]": "id",
+      "columns[2][searchable]": true,
+      "columns[2][orderable]": true,
+      "columns[2][search][value]": "",
+      "columns[2][search][regex]": false,
+      "order[0][column]": 0
+    };
+    Dio dio = Dio();
+    var data = await dio.get(
+      "http://192.168.100.11:8000/api/brand/dataTable",
+      queryParameters: param,
+    );
+    print(data);
   }
 
   Future _openModal({Brand? brand}) async {
