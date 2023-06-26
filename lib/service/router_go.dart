@@ -1,3 +1,4 @@
+import 'package:fl_wms/screen/category/screen/category_screen.dart';
 import 'package:fl_wms/screen/dashboard/screen/dashboard_screen.dart';
 import 'package:fl_wms/main_layout/parent_layout.dart';
 import 'package:fl_wms/screen/brand/screen/brand_screen.dart';
@@ -39,37 +40,18 @@ class RouteNavigation {
                 child: const BrandScreen(),
               );
             },
-            // pageBuilder: (context, state) {
-            //   return CustomTransitionPage(
-            //     // key: state.pageKey,
-            //     child: const BrandScreen(),
-            //     transitionsBuilder:
-            //         (context, animation, secondaryAnimation, child) {
-            //       return FadeTransition(
-            //         opacity: CurveTween(curve: Curves.easeInOutCirc)
-            //             .animate(animation),
-            //       );
-            //     },
-            //   );
-            // },
-            // routes: <RouteBase>[
-            //   GoRoute(
-            //     path: 'brand',
-            //     pageBuilder: (context, state) {
-            //       return CustomTransitionPage(
-            //         key: state.pageKey,
-            //         child: BrandScreen(),
-            //         transitionsBuilder:
-            //             (context, animation, secondaryAnimation, child) {
-            //           return FadeTransition(
-            //             opacity: CurveTween(curve: Curves.easeInOutCirc)
-            //                 .animate(animation),
-            //           );
-            //         },
-            //       );
-            //     },
-            //   ),
-            // ],
+          ),
+          GoRoute(
+            parentNavigatorKey: _shellNavigatorKey,
+            path: '/category',
+            name: "category",
+            pageBuilder: (context, state) {
+              return NoTransitionPage(
+                arguments: {"name": state.path},
+                name: "category",
+                child: const ServerDataTable(),
+              );
+            },
           ),
         ],
       ),

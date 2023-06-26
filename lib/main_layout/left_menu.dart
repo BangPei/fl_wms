@@ -149,14 +149,12 @@ class MainMenu extends StatelessWidget {
                   LeftListTile(
                     selected: false,
                     title: "Brand",
-                    // icon: FontAwesomeIcons.toolbox,
                     onTap: () => context.go('/brand'),
                   ),
                   LeftListTile(
                     selected: false,
                     title: "Category",
-                    // icon: FontAwesomeIcons.toolbox,
-                    onTap: () {},
+                    onTap: () => context.go('/category'),
                   ),
                   LeftListTile(
                     selected: false,

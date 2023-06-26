@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:fl_wms/screen/brand/data/brand.dart';
+import 'package:fl_wms/screen/category/data/category.dart';
 import 'package:retrofit/retrofit.dart';
 
 part 'restclient.g.dart';
@@ -22,4 +23,19 @@ abstract class RestClient {
 
   @DELETE("brand/{id}")
   Future<dynamic> deleteBrand(@Path() int id);
+
+  @GET("category")
+  Future<List<Category>> getCategories();
+
+  @GET("category/{id}")
+  Future<Category> getCategory(@Path() int id);
+
+  @POST("category")
+  Future postCategory(@Body() Category category);
+
+  @PUT("category/{id}")
+  Future putCategory(@Path() int id, @Body() Category category);
+
+  @DELETE("category/{id}")
+  Future<dynamic> deleteCategory(@Path() int id);
 }
