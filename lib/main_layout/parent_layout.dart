@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 
 class ParentLayout extends StatefulWidget {
   final Widget child;
-  const ParentLayout({super.key, required this.child});
+  final String menu;
+  const ParentLayout({super.key, required this.child, required this.menu});
 
   @override
   State<ParentLayout> createState() => _ParentLayoutState();
@@ -32,6 +33,7 @@ class _ParentLayoutState extends State<ParentLayout> {
           child: LeftMenu(
             showMenu: showMenu,
             menuSize: drawerSize,
+            menu: widget.menu,
             onPressed: (size) {
               setState(() {
                 Future.delayed(const Duration(milliseconds: 300), () {
@@ -65,6 +67,7 @@ class _ParentLayoutState extends State<ParentLayout> {
                 child: LeftMenu(
                   showMenu: showMenu,
                   menuSize: drawerSize,
+                  menu: widget.menu,
                   onPressed: (size) {
                     drawerSize = size;
                     isCloseDrawer = true;

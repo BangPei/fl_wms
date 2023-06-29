@@ -1,4 +1,3 @@
-import 'package:dio/dio.dart';
 import 'package:fl_wms/library/common.dart';
 import 'package:fl_wms/screen/brand/bloc/brand_bloc.dart';
 import 'package:fl_wms/screen/brand/data/brand.dart';
@@ -19,8 +18,6 @@ class BrandScreen extends StatefulWidget {
 }
 
 class _BrandScreenState extends State<BrandScreen> {
-  bool isLoading = false;
-
   bool isActive = true;
   final formgroup = FormGroup({
     'name': FormControl<String>(
@@ -34,12 +31,12 @@ class _BrandScreenState extends State<BrandScreen> {
 
   @override
   void initState() {
-    loadServerside();
+    context.read<BrandBloc>().add(const GetBrands());
     _controller.addListener(() {
       isActive = _controller.value;
       formgroup.control('is_active').value = isActive;
     });
-    context.read<BrandBloc>().add(const GetBrands());
+
     super.initState();
   }
 
@@ -58,7 +55,7 @@ class _BrandScreenState extends State<BrandScreen> {
                 dataRowMinHeight: 20,
                 showCheckboxColumn: false,
                 showFirstLastButtons: true,
-                availableRowsPerPage: const [1, 5, 10, 50],
+                availableRowsPerPage: const [10, 20, 50, 100],
                 rowsPerPage: rowsPerPage,
                 primary: true,
                 header: DefaultCardTitle(
@@ -82,7 +79,7 @@ class _BrandScreenState extends State<BrandScreen> {
                 ],
                 source: BrandSource(
                   state.brands,
-                  onViewRowSelect: (i) => _openModal(brand: i),
+                  onTap: (i) => _openModal(brand: i),
                 ),
                 onPageChanged: (value) {
                   rowsPerPage = value;
@@ -98,34 +95,6 @@ class _BrandScreenState extends State<BrandScreen> {
         }
       },
     );
-  }
-
-  loadServerside() async {
-    Map<String, dynamic> param = {
-      "draw": 1,
-      "columns[0][data]": "name",
-      "columns[0][searchable]": true,
-      "columns[0][orderable]": true,
-      "columns[0][search][value]": "",
-      "columns[0][search][regex]": false,
-      "columns[1][data]": "is_active",
-      "columns[1][searchable]": true,
-      "columns[1][orderable]": true,
-      "columns[1][search][value]": "",
-      "columns[1][search][regex]": false,
-      "columns[2][data]": "id",
-      "columns[2][searchable]": true,
-      "columns[2][orderable]": true,
-      "columns[2][search][value]": "",
-      "columns[2][search][regex]": false,
-      "order[0][column]": 0
-    };
-    Dio dio = Dio();
-    var data = await dio.get(
-      "http://192.168.100.11:8000/api/brand/dataTable",
-      queryParameters: param,
-    );
-    print(data);
   }
 
   Future _openModal({Brand? brand}) async {

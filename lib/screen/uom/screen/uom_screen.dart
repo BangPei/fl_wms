@@ -1,7 +1,7 @@
 import 'package:fl_wms/library/common.dart';
-import 'package:fl_wms/screen/category/bloc/category_bloc.dart';
-import 'package:fl_wms/screen/category/data/category.dart';
-import 'package:fl_wms/screen/category/data/category_source.dart';
+import 'package:fl_wms/screen/uom/bloc/uom_bloc.dart';
+import 'package:fl_wms/screen/uom/data/uom.dart';
+import 'package:fl_wms/screen/uom/data/uom_source.dart';
 import 'package:fl_wms/widget/card_template.dart';
 import 'package:fl_wms/widget/loading_shimmer.dart';
 import 'package:flutter/material.dart';
@@ -10,17 +10,21 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bootstrap_widgets/bootstrap_widgets.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
-class CategoryScreen extends StatefulWidget {
-  const CategoryScreen({super.key});
+class UomScreen extends StatefulWidget {
+  const UomScreen({super.key});
 
   @override
-  State<CategoryScreen> createState() => _CategoryScreenState();
+  State<UomScreen> createState() => _UomScreenState();
 }
 
-class _CategoryScreenState extends State<CategoryScreen> {
+class _UomScreenState extends State<UomScreen> {
   bool isActive = true;
   final formgroup = FormGroup({
     'name': FormControl<String>(
+      value: '',
+      validators: [Validators.required],
+    ),
+    'alias': FormControl<String>(
       value: '',
       validators: [Validators.required],
     ),
@@ -31,7 +35,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
 
   @override
   void initState() {
-    context.read<CategoryBloc>().add(const GetCategories());
+    context.read<UomBloc>().add(const GetUoms());
     _controller.addListener(() {
       isActive = _controller.value;
       formgroup.control('is_active').value = isActive;
@@ -42,11 +46,11 @@ class _CategoryScreenState extends State<CategoryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<CategoryBloc, CategoryState>(
+    return BlocBuilder<UomBloc, UomState>(
       builder: (context, state) {
-        if (state is CategoryLoadingState) {
+        if (state is UomLoadingState) {
           return const LoadingShimmer();
-        } else if (state is CategoryDataState) {
+        } else if (state is UomDataState) {
           return Padding(
             padding: const EdgeInsets.only(top: 13),
             child: SingleChildScrollView(
@@ -59,7 +63,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                 rowsPerPage: rowsPerPage,
                 primary: true,
                 header: DefaultCardTitle(
-                  "Kategory",
+                  "Uom",
                   onPressed: _openModal,
                   showAddButton: true,
                 ),
@@ -68,7 +72,10 @@ class _CategoryScreenState extends State<CategoryScreen> {
                     label: Text("No"),
                   ),
                   DataColumn(
-                    label: Text("Kategori"),
+                    label: Text("Uom"),
+                  ),
+                  DataColumn(
+                    label: Text("Alias"),
                   ),
                   DataColumn(
                     label: Text("Status"),
@@ -77,9 +84,9 @@ class _CategoryScreenState extends State<CategoryScreen> {
                     label: Text("Action"),
                   ),
                 ],
-                source: CategorySource(
-                  state.categories,
-                  onTap: (i) => _openModal(category: i),
+                source: UomSource(
+                  state.uoms,
+                  onTap: (i) => _openModal(uom: i),
                 ),
                 onPageChanged: (value) {
                   rowsPerPage = value;
@@ -97,23 +104,24 @@ class _CategoryScreenState extends State<CategoryScreen> {
     );
   }
 
-  Future _openModal({Category? category}) async {
-    if (category != null) {
-      formgroup.control("name").value = category.name;
-      _controller.value = category.isActive!;
-      formgroup.control('is_active').value = category.isActive;
+  Future _openModal({Uom? uom}) async {
+    if (uom != null) {
+      formgroup.control("name").value = uom.name;
+      formgroup.control("alias").value = uom.alias;
+      _controller.value = uom.isActive!;
+      formgroup.control('is_active').value = uom.isActive;
     }
     await Common.modalBootstrapt(
       context,
       BootstrapModalSize.medium,
-      title: "Add Category",
+      title: "Add Uom",
       onSave: () {
-        Category newCategory = Category.fromJson(formgroup.value);
-        if (category != null) {
-          newCategory.id = category.id;
-          context.read<CategoryBloc>().add(PutCategory(newCategory));
+        Uom newUom = Uom.fromJson(formgroup.value);
+        if (uom != null) {
+          newUom.id = uom.id;
+          context.read<UomBloc>().add(PutUom(newUom));
         } else {
-          context.read<CategoryBloc>().add(PostCategory(newCategory));
+          context.read<UomBloc>().add(PostUom(newUom));
         }
       },
       content: ReactiveForm(
@@ -124,10 +132,21 @@ class _CategoryScreenState extends State<CategoryScreen> {
             BootstrapFormGroup(
               children: [
                 const BootstrapLabelText(
-                  child: SelectableText('Kategori'),
+                  child: SelectableText('Uom'),
                 ),
                 ReactiveTextField(
                   formControlName: 'name',
+                  decoration: const BootstrapInputDecoration(),
+                ),
+              ],
+            ),
+            BootstrapFormGroup(
+              children: [
+                const BootstrapLabelText(
+                  child: SelectableText('Alias'),
+                ),
+                ReactiveTextField(
+                  formControlName: 'alias',
                   decoration: const BootstrapInputDecoration(),
                 ),
               ],

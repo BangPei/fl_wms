@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 
 class LeftExpantionTile extends StatefulWidget {
   final String title;
+  final String menu;
   final IconData? icon;
   final List<Widget>? children;
-  final bool? expanded;
   final bool? visibility;
   final ValueChanged<bool>? onExpansionChanged;
   const LeftExpantionTile({
@@ -12,9 +12,9 @@ class LeftExpantionTile extends StatefulWidget {
     required this.title,
     this.icon,
     this.children,
-    this.expanded,
     this.onExpansionChanged,
     this.visibility,
+    required this.menu,
   }) : super(key: key);
 
   @override
@@ -24,8 +24,10 @@ class LeftExpantionTile extends StatefulWidget {
 class _LeftExpantionTileState extends State<LeftExpantionTile> {
   IconData iconData = Icons.arrow_right;
   bool isHover = false;
+  bool expanded = false;
   @override
   Widget build(BuildContext context) {
+    expanded = widget.title.toLowerCase() == widget.menu.toLowerCase();
     return Visibility(
       visible: widget.visibility ?? true,
       replacement: MouseRegion(
@@ -34,7 +36,7 @@ class _LeftExpantionTileState extends State<LeftExpantionTile> {
           child: Icon(
             widget.icon ?? Icons.card_travel,
             size: 25,
-            color: (isHover || (widget.expanded ?? false))
+            color: (isHover || expanded)
                 ? Colors.blue[400]
                 : const Color.fromRGBO(238, 182, 172, 1),
           ),
@@ -53,12 +55,12 @@ class _LeftExpantionTileState extends State<LeftExpantionTile> {
         child: Theme(
           data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
           child: ExpansionTile(
-            initiallyExpanded: widget.expanded ?? false,
+            initiallyExpanded: expanded,
             title: Text(
               widget.title,
               style: TextStyle(
                 fontSize: 13,
-                color: (isHover || (widget.expanded ?? false))
+                color: (isHover || expanded)
                     ? Colors.blue[400]
                     : const Color.fromARGB(255, 78, 78, 78),
               ),
@@ -66,7 +68,7 @@ class _LeftExpantionTileState extends State<LeftExpantionTile> {
             leading: Icon(
               widget.icon ?? Icons.card_travel,
               size: 25,
-              color: (isHover || (widget.expanded ?? false))
+              color: (isHover || expanded)
                   ? Colors.blue[400]
                   : const Color.fromRGBO(238, 182, 172, 1),
             ),
@@ -74,7 +76,7 @@ class _LeftExpantionTileState extends State<LeftExpantionTile> {
                 ? const SizedBox.shrink()
                 : Icon(
                     iconData,
-                    color: (isHover || (widget.expanded ?? false))
+                    color: (isHover || expanded)
                         ? Colors.blue[400]
                         : const Color.fromRGBO(238, 182, 172, 1),
                   ),

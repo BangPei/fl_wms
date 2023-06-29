@@ -33,6 +33,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.11.0"
+  badges:
+    dependency: "direct main"
+    description:
+      name: badges
+      sha256: "6e7f3ec561ec08f47f912cfe349d4a1707afdc8dda271e17b046aa6d42c89e77"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.1.1"
   bloc:
     dependency: transitive
     description:
@@ -267,14 +275,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_web_data_table:
-    dependency: "direct main"
-    description:
-      name: flutter_web_data_table
-      sha256: a059dad7673dcec32905ec1de5e92dab7c3a4d0b6bf7ddc1ad082c679dc48498
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.0"
   flutter_web_plugins:
     dependency: transitive
     description: flutter

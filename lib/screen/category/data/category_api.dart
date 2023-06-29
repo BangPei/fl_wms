@@ -16,7 +16,7 @@ class CategoryApi {
 
   static Future postCategory(Category category) async {
     final client = await Api.restClient();
-    var data = client.postCategory(Category);
+    var data = client.postCategory(category);
     return data;
   }
 

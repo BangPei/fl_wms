@@ -1,28 +1,27 @@
-import 'package:fl_wms/screen/brand/data/brand.dart';
+import 'package:fl_wms/screen/uom/data/uom.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bootstrap_widgets/bootstrap_widgets.dart';
 import 'package:badges/badges.dart' as badges;
+import 'package:flutter_bootstrap_widgets/bootstrap_widgets.dart';
 
-// typedef OnViewRowSelect = void Function(Brand brand);
-
-class BrandSource extends DataTableSource {
-  final List<Brand> brands;
-  final Function(Brand) onTap;
+class UomSource extends DataTableSource {
+  final List<Uom> uoms;
+  final Function(Uom) onTap;
   // final OnViewRowSelect onViewRowSelect;
-  BrandSource(this.brands, {required this.onTap});
+  UomSource(this.uoms, {required this.onTap});
 
   @override
   DataRow? getRow(int index) {
     assert(index >= 0);
-    if (index >= brands.length) {
+    if (index >= uoms.length) {
       return null;
     }
-    Brand e = brands[index];
-    if (brands.isEmpty) {
+    Uom e = uoms[index];
+    if (uoms.isEmpty) {
       return DataRow.byIndex(
         index: index,
         // onSelectChanged: null,
         cells: const [
+          DataCell(Text("")),
           DataCell(Text("")),
           DataCell(Text("")),
           DataCell(Text("")),
@@ -43,6 +42,7 @@ class BrandSource extends DataTableSource {
       cells: [
         DataCell(Text("${index + 1}")),
         DataCell(Text(e.name ?? "")),
+        DataCell(Text(e.alias ?? "")),
         DataCell(badges.Badge(
           badgeContent: Text(
             e.isActive! ? "Active" : "Inactive",
@@ -131,7 +131,7 @@ class BrandSource extends DataTableSource {
   bool get isRowCountApproximate => false;
 
   @override
-  int get rowCount => brands.length;
+  int get rowCount => uoms.length;
 
   @override
   int get selectedRowCount => 0;

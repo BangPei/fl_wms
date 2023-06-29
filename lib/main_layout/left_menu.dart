@@ -4,25 +4,23 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 
-class LeftMenu extends StatefulWidget {
+class LeftMenu extends StatelessWidget {
   final double menuSize;
   final bool showMenu;
+  final String menu;
   final Function(double) onPressed;
-  const LeftMenu(
-      {super.key,
-      required this.menuSize,
-      required this.onPressed,
-      required this.showMenu});
+  const LeftMenu({
+    super.key,
+    required this.menuSize,
+    required this.onPressed,
+    required this.showMenu,
+    required this.menu,
+  });
 
-  @override
-  State<LeftMenu> createState() => _LeftMenuState();
-}
-
-class _LeftMenuState extends State<LeftMenu> {
   @override
   Widget build(BuildContext context) {
     return AnimatedContainer(
-      width: widget.menuSize,
+      width: menuSize,
       duration: const Duration(milliseconds: 200),
       height: double.infinity,
       decoration: const BoxDecoration(
@@ -47,13 +45,17 @@ class _LeftMenuState extends State<LeftMenu> {
       ),
       child: Column(
         children: [
-          HeaderMenu(size: widget.menuSize),
+          HeaderMenu(size: menuSize),
           const Divider(height: 20, color: Colors.transparent),
-          Expanded(child: MainMenu(size: widget.menuSize)),
+          Expanded(
+              child: MainMenu(
+            size: menuSize,
+            menu: menu,
+          )),
           Footer(
-            showMenu: widget.showMenu,
-            size: widget.menuSize,
-            onPressed: widget.onPressed,
+            showMenu: showMenu,
+            size: menuSize,
+            onPressed: onPressed,
           ),
         ],
       ),
@@ -132,224 +134,159 @@ class _HeaderMenuState extends State<HeaderMenu> {
   }
 }
 
-class MainMenu extends StatelessWidget {
+class MainMenu extends StatefulWidget {
   final double size;
-  const MainMenu({super.key, required this.size});
+  final String menu;
+  const MainMenu({super.key, required this.size, required this.menu});
 
+  @override
+  State<MainMenu> createState() => _MainMenuState();
+}
+
+class _MainMenuState extends State<MainMenu> {
   @override
   Widget build(BuildContext context) {
     return ListView(
       children: [
         LeftExpantionTile(
-          visibility: size > 60,
+          visibility: widget.size > 60,
           title: "Master",
+          menu: widget.menu,
           icon: FontAwesomeIcons.toolbox,
-          children: size > 60
+          children: widget.size > 60
               ? [
-                  LeftListTile(
-                    selected: false,
+                  const LeftListTile(
                     title: "Brand",
-                    onTap: () => context.go('/brand'),
+                    routeName: "brand",
                   ),
-                  LeftListTile(
-                    selected: false,
+                  const LeftListTile(
                     title: "Category",
-                    onTap: () => context.go('/category'),
+                    routeName: "category",
                   ),
-                  LeftListTile(
-                    selected: false,
+                  const LeftListTile(
                     title: "UOM",
-                    // icon: FontAwesomeIcons.toolbox,
-                    onTap: () {},
+                    routeName: "uom",
                   ),
-                  LeftListTile(
-                    selected: false,
+                  const LeftListTile(
                     title: "Palette",
-                    // icon: FontAwesomeIcons.toolbox,
-                    onTap: () {},
+                    routeName: "palette",
                   ),
-                  LeftListTile(
-                    selected: false,
+                  const LeftListTile(
                     title: "Rack",
-                    // icon: FontAwesomeIcons.toolbox,
-                    onTap: () {},
+                    routeName: "rack",
                   ),
                 ]
               : [],
         ),
         LeftExpantionTile(
-          visibility: size > 60,
-          title: "Order",
-          icon: FontAwesomeIcons.firstOrderAlt,
-          // expanded: true,
-          children: size > 60
-              ? [
-                  LeftListTile(
-                    // selected: true,
-                    title: "Purchase",
-                    // icon: FontAwesomeIcons.circle,
-                    onTap: () {},
-                  ),
-                  LeftListTile(
-                    selected: false,
-                    title: "Sales",
-                    // icon: FontAwesomeIcons.toolbox,
-                    onTap: () {},
-                  ),
-                ]
-              : [],
-        ),
-        LeftExpantionTile(
-          visibility: size > 60,
-          title: "Customer",
-          icon: FontAwesomeIcons.bullseye,
-          // expanded: true,
-          children: size > 60
-              ? [
-                  LeftListTile(
-                    // selected: true,
-                    title: "Management Customer",
-                    // icon: FontAwesomeIcons.circle,
-                    onTap: () {},
-                  ),
-                  LeftListTile(
-                    selected: false,
-                    title: "Add Cutomer",
-                    // icon: FontAwesomeIcons.toolbox,
-                    onTap: () {},
-                  ),
-                ]
-              : [],
-        ),
-        LeftExpantionTile(
-          visibility: size > 60,
-          title: "Supplier",
-          icon: FontAwesomeIcons.downLeftAndUpRightToCenter,
-          // expanded: true,
-          children: size > 60
-              ? [
-                  LeftListTile(
-                    // selected: true,
-                    title: "Management Supplier",
-                    // icon: FontAwesomeIcons.circle,
-                    onTap: () {},
-                  ),
-                  LeftListTile(
-                    selected: false,
-                    title: "Add Supplier",
-                    // icon: FontAwesomeIcons.toolbox,
-                    onTap: () {},
-                  ),
-                ]
-              : [],
-        ),
-        LeftExpantionTile(
-          visibility: size > 60,
+          visibility: widget.size > 60,
           title: "Product",
+          menu: widget.menu,
           icon: FontAwesomeIcons.productHunt,
           // expanded: true,
-          children: size > 60
+          children: widget.size > 60
               ? [
-                  LeftListTile(
-                    // selected: true,
+                  const LeftListTile(
                     title: "Management Product",
-                    // icon: FontAwesomeIcons.circle,
-                    onTap: () {},
+                    routeName: "product",
                   ),
-                  LeftListTile(
-                    selected: false,
+                  const LeftListTile(
                     title: "Add Product",
-                    // icon: FontAwesomeIcons.toolbox,
-                    onTap: () {},
+                    routeName: "product-form",
                   ),
                 ]
               : [],
         ),
         LeftExpantionTile(
-          visibility: size > 60,
+          visibility: widget.size > 60,
           title: "Warehouse",
+          menu: widget.menu,
           icon: FontAwesomeIcons.buildingShield,
-          expanded: false,
-          children: size > 60
+          children: widget.size > 60
               ? [
-                  LeftListTile(
-                    selected: false,
+                  const LeftListTile(
                     title: "Management Warehouse",
-                    // icon: FontAwesomeIcons.circle,
-                    onTap: () {},
+                    routeName: "warehouse",
                   ),
-                  LeftListTile(
-                    selected: false,
+                  const LeftListTile(
                     title: "Add Warehouse",
-                    // icon: FontAwesomeIcons.toolbox,
-                    onTap: () {},
+                    routeName: "warehouse-form",
                   ),
                 ]
               : [],
         ),
         LeftExpantionTile(
-          visibility: size > 60,
+          visibility: widget.size > 60,
+          title: "Order",
+          menu: widget.menu,
+          icon: FontAwesomeIcons.firstOrderAlt,
+          children: widget.size > 60
+              ? [
+                  const LeftListTile(title: "Purchase"),
+                  const LeftListTile(title: "Sales"),
+                ]
+              : [],
+        ),
+        LeftExpantionTile(
+          visibility: widget.size > 60,
+          title: "Customer",
+          menu: widget.menu,
+          icon: FontAwesomeIcons.bullseye,
+          // expanded: true,
+          children: widget.size > 60
+              ? [
+                  const LeftListTile(title: "Management Customer"),
+                  const LeftListTile(title: "Add Cutomer"),
+                ]
+              : [],
+        ),
+        LeftExpantionTile(
+          visibility: widget.size > 60,
+          title: "Supplier",
+          menu: widget.menu,
+          icon: FontAwesomeIcons.downLeftAndUpRightToCenter,
+          // expanded: true,
+          children: widget.size > 60
+              ? [
+                  const LeftListTile(title: "Management Supplier"),
+                  const LeftListTile(title: "Add Supplier"),
+                ]
+              : [],
+        ),
+        LeftExpantionTile(
+          visibility: widget.size > 60,
           title: "Stock",
           icon: FontAwesomeIcons.store,
-          expanded: false,
-          children: size > 60
+          menu: widget.menu,
+          children: widget.size > 60
               ? [
-                  LeftListTile(
-                    selected: false,
-                    title: "Inbound",
-                    // icon: FontAwesomeIcons.toolbox,
-                    onTap: () {},
-                  ),
-                  LeftListTile(
-                    selected: false,
-                    title: "Outbound",
-                    // icon: FontAwesomeIcons.toolbox,
-                    onTap: () {},
-                  ),
-                  LeftListTile(
-                    selected: false,
-                    title: "Mutation",
-                    // icon: FontAwesomeIcons.toolbox,
-                    onTap: () {},
-                  ),
+                  const LeftListTile(title: "Inbound"),
+                  const LeftListTile(title: "Outbound"),
+                  const LeftListTile(title: "Mutation"),
                 ]
               : [],
         ),
         LeftExpantionTile(
-          visibility: size > 60,
+          visibility: widget.size > 60,
           title: "Report",
+          menu: widget.menu,
           icon: FontAwesomeIcons.bookAtlas,
-          expanded: false,
-          children: size > 60
+          children: widget.size > 60
               ? [
-                  LeftListTile(
-                    selected: false,
-                    title: "Tracking",
-                    // icon: FontAwesomeIcons.toolbox,
-                    onTap: () {},
-                  ),
-                  LeftListTile(
-                    selected: false,
-                    title: "Product Moving",
-                    // icon: FontAwesomeIcons.toolbox,
-                    onTap: () {},
-                  ),
+                  const LeftListTile(title: "Tracking"),
+                  const LeftListTile(title: "Product Moving"),
                 ]
               : [],
         ),
         LeftListTile(
-          visibility: size > 60,
-          selected: false,
+          visibility: widget.size > 60,
           title: "User",
           icon: FontAwesomeIcons.users,
-          onTap: () {},
         ),
         LeftListTile(
-          visibility: size > 60,
-          selected: false,
+          visibility: widget.size > 60,
           title: "Setting",
           icon: FontAwesomeIcons.gears,
-          onTap: () {},
         ),
       ],
     );

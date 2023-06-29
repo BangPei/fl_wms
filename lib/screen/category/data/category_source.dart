@@ -1,24 +1,24 @@
-import 'package:fl_wms/screen/brand/data/brand.dart';
+import 'package:fl_wms/screen/category/data/category.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bootstrap_widgets/bootstrap_widgets.dart';
 import 'package:badges/badges.dart' as badges;
 
 // typedef OnViewRowSelect = void Function(Brand brand);
 
-class BrandSource extends DataTableSource {
-  final List<Brand> brands;
-  final Function(Brand) onTap;
+class CategorySource extends DataTableSource {
+  final List<Category> categories;
+  final Function(Category) onTap;
   // final OnViewRowSelect onViewRowSelect;
-  BrandSource(this.brands, {required this.onTap});
+  CategorySource(this.categories, {required this.onTap});
 
   @override
   DataRow? getRow(int index) {
     assert(index >= 0);
-    if (index >= brands.length) {
+    if (index >= categories.length) {
       return null;
     }
-    Brand e = brands[index];
-    if (brands.isEmpty) {
+    Category e = categories[index];
+    if (categories.isEmpty) {
       return DataRow.byIndex(
         index: index,
         // onSelectChanged: null,
@@ -131,7 +131,7 @@ class BrandSource extends DataTableSource {
   bool get isRowCountApproximate => false;
 
   @override
-  int get rowCount => brands.length;
+  int get rowCount => categories.length;
 
   @override
   int get selectedRowCount => 0;
