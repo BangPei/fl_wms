@@ -210,7 +210,7 @@ class _MainMenuState extends State<MainMenu> {
                   ),
                   const LeftListTile(
                     title: "Add Warehouse",
-                    routeName: "warehouse-form",
+                    routeName: "warehouse/form",
                   ),
                 ]
               : [],

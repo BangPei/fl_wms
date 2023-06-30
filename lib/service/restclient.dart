@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:fl_wms/screen/brand/data/brand.dart';
 import 'package:fl_wms/screen/category/data/category.dart';
 import 'package:fl_wms/screen/uom/data/uom.dart';
+import 'package:fl_wms/screen/warehouse/data/warehouse.dart';
 import 'package:retrofit/retrofit.dart';
 
 part 'restclient.g.dart';
@@ -54,4 +55,19 @@ abstract class RestClient {
 
   @DELETE("uom/{id}")
   Future<dynamic> deleteUom(@Path() int id);
+
+  @GET("warehouse")
+  Future<List<Warehouse>> getWarehouses();
+
+  @GET("warehouse/{id}")
+  Future<Warehouse> getWarehouse(@Path() int id);
+
+  @POST("warehouse")
+  Future postWarehouse(@Body() Warehouse wa);
+
+  @PUT("warehouse/{id}")
+  Future putWarehouse(@Path() int id, @Body() Warehouse wa);
+
+  @DELETE("warehouse/{id}")
+  Future<dynamic> deleteWarehouse(@Path() int id);
 }
