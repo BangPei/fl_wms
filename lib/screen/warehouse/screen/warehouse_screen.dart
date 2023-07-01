@@ -15,6 +15,7 @@ class WarehouseScreen extends StatefulWidget {
 
 class _WarehouseScreenState extends State<WarehouseScreen> {
   List<PlutoRow> rows = [];
+  late final PlutoGridStateManager stateManager;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -22,38 +23,33 @@ class _WarehouseScreenState extends State<WarehouseScreen> {
       child: PlutoGrid(
         columns: [
           PlutoColumn(
-            title: "Code",
-            field: "code",
-            type: const PlutoColumnTypeText(),
+            title: "Expedition",
+            field: "expedition_name",
+            type: PlutoColumnType.text(),
           ),
           PlutoColumn(
-            title: "Warehouse",
-            field: "name",
-            type: const PlutoColumnTypeText(),
+            title: "Date",
+            field: "date",
+            type: PlutoColumnType.date(format: "dd MMMM yyyy"),
           ),
           PlutoColumn(
-            title: "Pic",
-            field: "pic",
-            type: const PlutoColumnTypeText(),
+            title: "Total Package",
+            field: "total_package",
+            type: PlutoColumnType.number(),
           ),
           PlutoColumn(
-            title: "Pic Phone",
-            field: "pic_phone",
-            type: const PlutoColumnTypeText(),
+            title: "Picked",
+            field: "picked",
+            type: PlutoColumnType.number(),
           ),
           PlutoColumn(
-            title: "Address",
-            field: "address",
-            type: const PlutoColumnTypeText(),
-          ),
-          PlutoColumn(
-            title: "phone",
-            field: "phone",
-            type: const PlutoColumnTypeText(),
+            title: "Left",
+            field: "left",
+            type: PlutoColumnType.number(),
           ),
           PlutoColumn(
             title: "Status",
-            field: "is_active",
+            field: "status",
             readOnly: true,
             type: const PlutoColumnTypeText(),
             renderer: (rendererContext) {
@@ -93,15 +89,24 @@ class _WarehouseScreenState extends State<WarehouseScreen> {
           ),
         ],
         rows: rows,
-        createFooter: (stateManager) {
+        onLoaded: (event) {
+          stateManager = event.stateManager;
+          // stateManager.setPage(5);
+          // stateManager.setPageSize(5);
+          stateManager.setShowColumnFilter(true);
+        },
+        onChanged: (event) {
+          print(event);
+        },
+        createFooter: (state) {
           return PlutoLazyPagination(
             initialPage: 1,
             initialFetch: true,
             fetchWithSorting: true,
             fetchWithFiltering: true,
-            pageSizeToMove: null,
+            pageSizeToMove: 1,
             fetch: fetch,
-            stateManager: stateManager,
+            stateManager: state,
           );
         },
       ),
@@ -127,17 +132,44 @@ class _WarehouseScreenState extends State<WarehouseScreen> {
         queryString +=
             '&sort=${request.sortColumn!.field},${request.sortColumn!.sort.name}';
       }
-      var response = await http.get(
-          Uri.parse("${Api.baseUrl}warehouse/dataTable$queryString"),
-          headers: {
-            "content-type": "application/json",
-            'X-Requested-With': 'XMLHttpRequest',
-          });
+      int recordTotal = 0;
+      int length = 10;
+      int start = (request.page - 1) * length;
+      Map<String, dynamic> map = {
+        "draw": request.page.toString(),
+        "columns[0][data]": "id",
+        "columns[0][searchable]": "true",
+        "columns[0][orderable]": "true",
+        "columns[0][search][regex]": "false",
+        "columns[1][data]": "name",
+        "columns[1][searchable]": "true",
+        "columns[1][orderable]": "true",
+        "columns[1][search][regex]": "false",
+        "columns[2][data]": "is_active",
+        "columns[2][searchable]": "true",
+        "columns[2][orderable]": "true",
+        "columns[2][search][regex]": "false",
+        "columns[3][data]": "id",
+        "columns[3][search][regex]": "false",
+        "order[0][column]": "0",
+        "order[0][dir]": "asc",
+        "start": start.toString(),
+        "length": length.toString(),
+      };
+      var url =
+          Uri.http("192.168.100.2:8000", "/api/daily-task/dataTable", map);
+      var response = await http.get(url, headers: {
+        "content-type": "application/json",
+        'X-Requested-With': 'XMLHttpRequest',
+      });
       if (response.statusCode == 200) {
         final parsedData = jsonDecode(response.body);
+        recordTotal = parsedData['recordsTotal'];
         final _data = parsedData["data"];
+        print(recordTotal.toString());
         final rows = _data.map<PlutoRow>((rowData) {
-          print(rowData);
+          rowData['expedition_name'] = rowData["expedition"]["name"];
+          rowData['total_receipt'] = rowData["receipts"].length;
           return PlutoRow.fromJson(rowData);
         });
 
