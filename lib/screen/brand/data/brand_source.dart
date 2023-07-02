@@ -8,12 +8,12 @@ import 'package:badges/badges.dart' as badges;
 
 class BrandSource extends AdvancedDataTableSource<Brand> {
   final List<Brand> brands;
-  final int count;
+  final int recordsTotal;
+  final int recordsFiltered;
   final Function(Brand) onTap;
-  List<String> selectedIds = [];
-  String lastSearchTerm = '';
   // final OnViewRowSelect onViewRowSelect;
-  BrandSource(this.brands, {required this.count, required this.onTap});
+  BrandSource(this.brands, {required this.recordsTotal,required this.recordsFiltered, required this.onTap});
+  String searchText = "";
 
   @override
   DataRow? getRow(int index) {
@@ -43,7 +43,7 @@ class BrandSource extends AdvancedDataTableSource<Brand> {
       }),
       // onSelectChanged: (val) => onViewRowSelect(e),
       cells: [
-        DataCell(Text(e.name ?? "")),
+        DataCell(SelectableText(e.name ?? "")),
         DataCell(badges.Badge(
           badgeContent: Text(
             e.isActive! ? "Active" : "Inactive",
@@ -129,21 +129,16 @@ class BrandSource extends AdvancedDataTableSource<Brand> {
   }
 
   @override
-  bool get isRowCountApproximate => false;
-
-  @override
-  int get rowCount => count;
-
-  @override
   int get selectedRowCount => 0;
+
+  void filterServerSide(String filterQuery) {
+    searchText = filterQuery.toLowerCase().trim();
+    setNextView();
+  }
 
   @override
   Future<RemoteDataSourceDetails<Brand>> getNextPage(
       NextPageRequest pageRequest) async {
-    return RemoteDataSourceDetails(
-      count,
-      brands,
-      filteredRows: lastSearchTerm.isNotEmpty ? count : null,
-    );
+    return RemoteDataSourceDetails(recordsTotal, brands, filteredRows: recordsFiltered);
   }
 }

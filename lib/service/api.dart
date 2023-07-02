@@ -6,16 +6,15 @@ import 'package:http/http.dart' as http;
 import 'package:fl_wms/service/restclient.dart';
 
 class Api {
-  // static const String baseUrl = "http://192.168.0.163:8000/api/";
-  static const String baseUrl = "http://192.168.100.11:8000/api/";
+  static const String url = "192.168.0.163:8000";
+  // static const String url = "192.168.100.11:8000";
 
-  // static const String baseUrlDataTable = "http://192.168.0.163:8000";
-  static const String baseUrlDataTable = "192.168.100.11:8000";
+  static String baseUrl() => "http://$url/api/";
 
   static restClient() async {
     final dio = Dio();
     // dio.options.headers["Authorization"] = await Session.get("authorization");
-    return RestClient(dio, baseUrl: baseUrl);
+    return RestClient(dio, baseUrl: baseUrl());
   }
 
   static Future<DataTableModel> getBrandDataTable(
@@ -25,7 +24,7 @@ class Api {
     String? searchText = "",
     int? length = 10,
     int? orderColumn = 0,
-    String? orderdir = "asc",
+    String? orderdir,
     Map<String, dynamic>? query,
   }) async {
     Map<String, dynamic> map = {
@@ -50,7 +49,7 @@ class Api {
       "length": length.toString(),
       "search[value]": searchText
     };
-    var url = Uri.http(Api.baseUrlDataTable, path, query ?? map);
+    var url = Uri.http(Api.url, path, query ?? map);
     var response = await http.get(url, headers: {
       "content-type": "application/json",
       'X-Requested-With': 'XMLHttpRequest',

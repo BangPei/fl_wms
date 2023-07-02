@@ -20,7 +20,6 @@ class BrandScreen extends StatefulWidget {
 
 class _BrandScreenState extends State<BrandScreen> {
   bool isActive = true;
-  int recordTotal = 0;
   int start = 0;
   var sortIndex = 0;
   var sortAsc = true;
@@ -32,6 +31,7 @@ class _BrandScreenState extends State<BrandScreen> {
     'is_active': FormControl<bool>(value: true)
   });
   final _controller = ValueNotifier<bool>(true);
+  final _searchController = TextEditingController();
   var rowsPerPage = AdvancedPaginatedDataTable.defaultRowsPerPage;
 
   @override
@@ -66,44 +66,56 @@ class _BrandScreenState extends State<BrandScreen> {
                       showAddButton: true,
                     ),
                   ),
-                  AdvancedPaginatedDataTable(
-                    loadingWidget: () => const LoadingShimmer(),
-                    dataRowHeight: 40,
-                    sortAscending: sortAsc,
-                    sortColumnIndex: sortIndex,
-                    showFirstLastButtons: true,
-                    addEmptyRows: false,
-                    showCheckboxColumn: false,
-                    availableRowsPerPage: const [5, 10, 25, 50, 100],
-                    rowsPerPage: rowsPerPage,
-                    columns: [
-                      DataColumn(
-                        label: const Text("Brand"),
-                        onSort: setSort,
+                  Card(
+                    child: AdvancedPaginatedDataTable(
+                      loadingWidget: () => const LoadingShimmer(),
+                      dataRowHeight: 40,
+                      sortAscending: sortAsc,
+                      sortColumnIndex: sortIndex,
+                      showFirstLastButtons: true,
+                      addEmptyRows: false,
+                      showCheckboxColumn: false,
+                      availableRowsPerPage: const [5, 10, 25, 50, 100],
+                      rowsPerPage: rowsPerPage,
+                      header: TextFormField(
+                        controller: _searchController,
+                        onFieldSubmitted: (val) {
+                          start = 0;
+                          context.read<BrandBloc>().add(GetBrandDataTableExtend(
+                                start: start,
+                                length: rowsPerPage,
+                                searchText: val.toLowerCase(),
+                              ));
+                        },
+                        decoration: const BootstrapInputDecoration(
+                          hintText: "Search...",
+                          contentPadding:
+                              EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+                        ),
                       ),
-                      const DataColumn(
-                        label: Text("Status"),
+                      columns: const [
+                        DataColumn(label: Text("Brand")),
+                        DataColumn(label: Text("Status")),
+                        DataColumn(label: Text("Action")),
+                      ],
+                      source: BrandSource(
+                        state.brands,
+                        recordsFiltered: state.dataTable?.recordsFiltered ?? 0,
+                        recordsTotal: state.dataTable?.recordsFiltered ?? 0,
+                        onTap: (i) => _openModal(brand: i),
                       ),
-                      const DataColumn(
-                        label: Text("Action"),
-                      ),
-                    ],
-                    source: BrandSource(
-                      state.brands,
-                      count: state.dataTable?.recordsFiltered ?? 0,
-                      onTap: (i) => _openModal(brand: i),
+                      onPageChanged: (value) {
+                        start = value;
+                        context.read<BrandBloc>().add(GetBrandDataTableExtend(
+                            start: value, length: rowsPerPage));
+                      },
+                      onRowsPerPageChanged: (n) {
+                        rowsPerPage = n!;
+                        start = 0;
+                        context.read<BrandBloc>().add(GetBrandDataTableExtend(
+                            start: start, length: rowsPerPage));
+                      },
                     ),
-                    onPageChanged: (value) {
-                      start = value;
-                      context.read<BrandBloc>().add(GetBrandDataTableExtend(
-                          start: value, length: rowsPerPage));
-                    },
-                    onRowsPerPageChanged: (n) {
-                      rowsPerPage = n!;
-                      start = 0;
-                      context.read<BrandBloc>().add(GetBrandDataTableExtend(
-                          start: start, length: rowsPerPage));
-                    },
                   ),
                 ],
               ),
@@ -116,10 +128,14 @@ class _BrandScreenState extends State<BrandScreen> {
     );
   }
 
-  void setSort(int i, bool asc) => setState(() {
-        sortIndex = i;
-        sortAsc = asc;
-      });
+  // void setSort(int i, bool asc) => setState(() {
+  //       sortIndex = i;
+  //       context.read<BrandBloc>().add(GetBrandDataTableExtend(
+  //             start: start,
+  //             length: rowsPerPage,
+  //             searchText: _searchController.text,
+  //           ));
+  //     });
 
   Future _openModal({Brand? brand}) async {
     if (brand != null) {
