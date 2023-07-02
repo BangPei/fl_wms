@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:fl_wms/service/api.dart';
 import 'package:flutter_bootstrap_widgets/bootstrap_widgets.dart';
 import 'package:http/http.dart' as http;
 import 'package:badges/badges.dart' as badges;
@@ -23,33 +22,43 @@ class _WarehouseScreenState extends State<WarehouseScreen> {
       child: PlutoGrid(
         columns: [
           PlutoColumn(
-            title: "Expedition",
-            field: "expedition_name",
-            type: PlutoColumnType.text(),
+            title: "Code",
+            field: "code",
+            type: const PlutoColumnTypeText(),
+            readOnly: true,
           ),
           PlutoColumn(
-            title: "Date",
-            field: "date",
-            type: PlutoColumnType.date(format: "dd MMMM yyyy"),
+            title: "Warehouse",
+            field: "name",
+            type: const PlutoColumnTypeText(),
           ),
           PlutoColumn(
-            title: "Total Package",
-            field: "total_package",
-            type: PlutoColumnType.number(),
+            title: "Pic",
+            field: "pic",
+            readOnly: true,
+            type: const PlutoColumnTypeText(),
           ),
           PlutoColumn(
-            title: "Picked",
-            field: "picked",
-            type: PlutoColumnType.number(),
+            title: "Pic Phone",
+            field: "pic_phone",
+            readOnly: true,
+            type: const PlutoColumnTypeText(),
           ),
           PlutoColumn(
-            title: "Left",
-            field: "left",
-            type: PlutoColumnType.number(),
+            title: "phone",
+            field: "phone",
+            readOnly: true,
+            type: const PlutoColumnTypeText(),
+          ),
+          PlutoColumn(
+            title: "Address",
+            field: "address",
+            readOnly: true,
+            type: const PlutoColumnTypeText(),
           ),
           PlutoColumn(
             title: "Status",
-            field: "status",
+            field: "is_active",
             readOnly: true,
             type: const PlutoColumnTypeText(),
             renderer: (rendererContext) {
@@ -59,8 +68,8 @@ class _WarehouseScreenState extends State<WarehouseScreen> {
                   badgeContent: Text(
                     rendererContext
                             .row.cells[rendererContext.column.field]!.value
-                        ? "Active"
-                        : "Inactive",
+                        ? "Selesai"
+                        : "Berjalan",
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 10,
@@ -91,8 +100,6 @@ class _WarehouseScreenState extends State<WarehouseScreen> {
         rows: rows,
         onLoaded: (event) {
           stateManager = event.stateManager;
-          // stateManager.setPage(5);
-          // stateManager.setPageSize(5);
           stateManager.setShowColumnFilter(true);
         },
         onChanged: (event) {
@@ -117,21 +124,7 @@ class _WarehouseScreenState extends State<WarehouseScreen> {
     PlutoLazyPaginationRequest request,
   ) async {
     try {
-      String queryString = '?page=${request.page}';
-      if (request.filterRows.isNotEmpty) {
-        final filterMap = FilterHelper.convertRowsToMap(request.filterRows);
-        for (final filter in filterMap.entries) {
-          for (final type in filter.value) {
-            queryString += '&filter[${filter.key}]';
-            final filterType = type.entries.first;
-            queryString += '[${filterType.key}][]=${filterType.value}';
-          }
-        }
-      }
-      if (request.sortColumn != null && !request.sortColumn!.sort.isNone) {
-        queryString +=
-            '&sort=${request.sortColumn!.field},${request.sortColumn!.sort.name}';
-      }
+      // print((request.filterRows).first.cells.values);
       int recordTotal = 0;
       int length = 10;
       int start = (request.page - 1) * length;
@@ -156,8 +149,7 @@ class _WarehouseScreenState extends State<WarehouseScreen> {
         "start": start.toString(),
         "length": length.toString(),
       };
-      var url =
-          Uri.http("192.168.100.2:8000", "/api/daily-task/dataTable", map);
+      var url = Uri.http("192.168.0.163:8000", "/api/warehouse/dataTable", map);
       var response = await http.get(url, headers: {
         "content-type": "application/json",
         'X-Requested-With': 'XMLHttpRequest',
@@ -165,16 +157,13 @@ class _WarehouseScreenState extends State<WarehouseScreen> {
       if (response.statusCode == 200) {
         final parsedData = jsonDecode(response.body);
         recordTotal = parsedData['recordsTotal'];
-        final _data = parsedData["data"];
-        print(recordTotal.toString());
-        final rows = _data.map<PlutoRow>((rowData) {
-          rowData['expedition_name'] = rowData["expedition"]["name"];
-          rowData['total_receipt'] = rowData["receipts"].length;
+        final data = parsedData["data"];
+        final rows = data.map<PlutoRow>((rowData) {
           return PlutoRow.fromJson(rowData);
         });
-
+        int totalPage = (recordTotal / length).ceil();
         return PlutoLazyPaginationResponse(
-          totalPage: parsedData['recordsTotal'],
+          totalPage: totalPage,
           rows: rows.toList(),
         );
       } else {
