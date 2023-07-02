@@ -1,3 +1,4 @@
+import 'package:advanced_datatable/datatable.dart';
 import 'package:fl_wms/library/common.dart';
 import 'package:fl_wms/screen/brand/bloc/brand_bloc.dart';
 import 'package:fl_wms/screen/brand/data/brand.dart';
@@ -19,6 +20,10 @@ class BrandScreen extends StatefulWidget {
 
 class _BrandScreenState extends State<BrandScreen> {
   bool isActive = true;
+  int recordTotal = 0;
+  int start = 0;
+  var sortIndex = 0;
+  var sortAsc = true;
   final formgroup = FormGroup({
     'name': FormControl<String>(
       value: '',
@@ -27,16 +32,17 @@ class _BrandScreenState extends State<BrandScreen> {
     'is_active': FormControl<bool>(value: true)
   });
   final _controller = ValueNotifier<bool>(true);
-  var rowsPerPage = PaginatedDataTable.defaultRowsPerPage;
+  var rowsPerPage = AdvancedPaginatedDataTable.defaultRowsPerPage;
 
   @override
   void initState() {
-    context.read<BrandBloc>().add(const GetBrands());
+    context
+        .read<BrandBloc>()
+        .add(GetBrandDataTable(start: start, length: rowsPerPage));
     _controller.addListener(() {
       isActive = _controller.value;
       formgroup.control('is_active').value = isActive;
     });
-
     super.initState();
   }
 
@@ -50,43 +56,56 @@ class _BrandScreenState extends State<BrandScreen> {
           return Padding(
             padding: const EdgeInsets.only(top: 13),
             child: SingleChildScrollView(
-              child: PaginatedDataTable(
-                dataRowMaxHeight: 35,
-                dataRowMinHeight: 20,
-                showCheckboxColumn: false,
-                showFirstLastButtons: true,
-                availableRowsPerPage: const [10, 20, 50, 100],
-                rowsPerPage: rowsPerPage,
-                primary: true,
-                header: DefaultCardTitle(
-                  "Brand",
-                  onPressed: _openModal,
-                  showAddButton: true,
-                ),
-                columns: const [
-                  DataColumn(
-                    label: Text("No"),
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: DefaultCardTitle(
+                      "Brand",
+                      onPressed: _openModal,
+                      showAddButton: true,
+                    ),
                   ),
-                  DataColumn(
-                    label: Text("Brand"),
-                  ),
-                  DataColumn(
-                    label: Text("Status"),
-                  ),
-                  DataColumn(
-                    label: Text("Action"),
+                  AdvancedPaginatedDataTable(
+                    loadingWidget: () => const LoadingShimmer(),
+                    dataRowHeight: 40,
+                    sortAscending: sortAsc,
+                    sortColumnIndex: sortIndex,
+                    showFirstLastButtons: true,
+                    addEmptyRows: false,
+                    showCheckboxColumn: false,
+                    availableRowsPerPage: const [5, 10, 25, 50, 100],
+                    rowsPerPage: rowsPerPage,
+                    columns: [
+                      DataColumn(
+                        label: const Text("Brand"),
+                        onSort: setSort,
+                      ),
+                      const DataColumn(
+                        label: Text("Status"),
+                      ),
+                      const DataColumn(
+                        label: Text("Action"),
+                      ),
+                    ],
+                    source: BrandSource(
+                      state.brands,
+                      count: state.dataTable?.recordsFiltered ?? 0,
+                      onTap: (i) => _openModal(brand: i),
+                    ),
+                    onPageChanged: (value) {
+                      start = value;
+                      context.read<BrandBloc>().add(GetBrandDataTableExtend(
+                          start: value, length: rowsPerPage));
+                    },
+                    onRowsPerPageChanged: (n) {
+                      rowsPerPage = n!;
+                      start = 0;
+                      context.read<BrandBloc>().add(GetBrandDataTableExtend(
+                          start: start, length: rowsPerPage));
+                    },
                   ),
                 ],
-                source: BrandSource(
-                  state.brands,
-                  onTap: (i) => _openModal(brand: i),
-                ),
-                onPageChanged: (value) {
-                  rowsPerPage = value;
-                },
-                onRowsPerPageChanged: (n) => setState(() {
-                  rowsPerPage = n!;
-                }),
               ),
             ),
           );
@@ -96,6 +115,11 @@ class _BrandScreenState extends State<BrandScreen> {
       },
     );
   }
+
+  void setSort(int i, bool asc) => setState(() {
+        sortIndex = i;
+        sortAsc = asc;
+      });
 
   Future _openModal({Brand? brand}) async {
     if (brand != null) {

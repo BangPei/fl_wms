@@ -1,3 +1,4 @@
+import 'package:advanced_datatable/advanced_datatable_source.dart';
 import 'package:fl_wms/screen/brand/data/brand.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bootstrap_widgets/bootstrap_widgets.dart';
@@ -5,11 +6,14 @@ import 'package:badges/badges.dart' as badges;
 
 // typedef OnViewRowSelect = void Function(Brand brand);
 
-class BrandSource extends DataTableSource {
+class BrandSource extends AdvancedDataTableSource<Brand> {
   final List<Brand> brands;
+  final int count;
   final Function(Brand) onTap;
+  List<String> selectedIds = [];
+  String lastSearchTerm = '';
   // final OnViewRowSelect onViewRowSelect;
-  BrandSource(this.brands, {required this.onTap});
+  BrandSource(this.brands, {required this.count, required this.onTap});
 
   @override
   DataRow? getRow(int index) {
@@ -26,14 +30,12 @@ class BrandSource extends DataTableSource {
           DataCell(Text("")),
           DataCell(Text("")),
           DataCell(Text("")),
-          DataCell(Text("")),
         ],
       );
     }
     return DataRow.byIndex(
       index: index,
       color: MaterialStateProperty.resolveWith((states) {
-        // If the button is pressed, return green, otherwise blue
         if (index % 2 != 0) {
           return Colors.grey.withOpacity(0.1);
         }
@@ -41,7 +43,6 @@ class BrandSource extends DataTableSource {
       }),
       // onSelectChanged: (val) => onViewRowSelect(e),
       cells: [
-        DataCell(Text("${index + 1}")),
         DataCell(Text(e.name ?? "")),
         DataCell(badges.Badge(
           badgeContent: Text(
@@ -131,8 +132,18 @@ class BrandSource extends DataTableSource {
   bool get isRowCountApproximate => false;
 
   @override
-  int get rowCount => brands.length;
+  int get rowCount => count;
 
   @override
   int get selectedRowCount => 0;
+
+  @override
+  Future<RemoteDataSourceDetails<Brand>> getNextPage(
+      NextPageRequest pageRequest) async {
+    return RemoteDataSourceDetails(
+      count,
+      brands,
+      filteredRows: lastSearchTerm.isNotEmpty ? count : null,
+    );
+  }
 }

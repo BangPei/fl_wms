@@ -149,7 +149,8 @@ class _WarehouseScreenState extends State<WarehouseScreen> {
         "start": start.toString(),
         "length": length.toString(),
       };
-      var url = Uri.http("192.168.0.163:8000", "/api/warehouse/dataTable", map);
+      var url =
+          Uri.http("192.168.100.11:8000", "/api/warehouse/dataTable", map);
       var response = await http.get(url, headers: {
         "content-type": "application/json",
         'X-Requested-With': 'XMLHttpRequest',
