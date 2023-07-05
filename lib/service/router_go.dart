@@ -68,12 +68,22 @@ class RouteNavigation {
                 GoRoute(
                   parentNavigatorKey: _warehouseNavigatorKey,
                   path: 'form',
-                  name: "warehouse-form",
+                  name: "add-warehouse",
+                  pageBuilder: (context, state) {
+                    return const NoTransitionPage(
+                      child: WarehouseFormScreen(),
+                    );
+                  },
+                ),
+                GoRoute(
+                  parentNavigatorKey: _warehouseNavigatorKey,
+                  path: 'form/:id',
+                  name: "edit-warehouse",
                   pageBuilder: (context, state) {
                     return NoTransitionPage(
-                      arguments: {"name": state.path},
-                      name: "warehouse-form",
-                      child: const WarehouseFormScreen(),
+                      child: WarehouseFormScreen(
+                        warehouseId: int.parse(state.pathParameters['id']!),
+                      ),
                     );
                   },
                 ),
