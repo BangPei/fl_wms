@@ -14,7 +14,6 @@ class UomErrorState extends UomState {
 }
 
 class UomDataState extends UomState {
-  final List<Uom> uoms;
-  const UomDataState(this.uoms);
-  List<Object?> get props => [uoms];
+  const UomDataState();
+  List<Object?> get props => [];
 }

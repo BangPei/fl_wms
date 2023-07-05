@@ -1,3 +1,4 @@
+import 'package:fl_wms/library/interceptor/navigation_service.dart';
 import 'package:fl_wms/screen/category/screen/category_screen.dart';
 import 'package:fl_wms/screen/dashboard/screen/dashboard_screen.dart';
 import 'package:fl_wms/main_layout/parent_layout.dart';
@@ -8,7 +9,9 @@ import 'package:fl_wms/screen/warehouse/screen/warehouse_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>();
+import '../library/interceptor/injector.dart';
+
+final NavigationService _nav = locator<NavigationService>();
 final GlobalKey<NavigatorState> _dashboardNavigatorKey =
     GlobalKey<NavigatorState>(debugLabel: 'dashboard');
 final GlobalKey<NavigatorState> _masterNavigatorKey =
@@ -18,7 +21,7 @@ final GlobalKey<NavigatorState> _warehouseNavigatorKey =
 
 class RouteNavigation {
   static final GoRouter router = GoRouter(
-    navigatorKey: _rootNavigatorKey,
+    navigatorKey: _nav.navKey,
     initialLocation: '/',
     routes: [
       ShellRoute(

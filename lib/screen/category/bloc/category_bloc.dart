@@ -7,39 +7,26 @@ part 'category_event.dart';
 part 'category_state.dart';
 
 class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
-  CategoryBloc() : super(CategoryLoadingState()) {
-    on<GetCategories>(_getCategories);
+  CategoryBloc() : super(const CategoryDataState()) {
     on<PostCategory>(_postCategory);
     on<PutCategory>(_putCategory);
   }
 
-  void _getCategories(GetCategories event, Emitter<CategoryState> emit) async {
+  void _postCategory(PostCategory event, Emitter<CategoryState> emit) async {
     emit(CategoryLoadingState());
     try {
-      List<Category> categoried = await CategoryApi.getCategories();
-      emit(CategoryDataState(categoried));
-    } catch (e) {
-      emit(CategoryErrorState());
-    }
-  }
-
-  void _postCategory(PostCategory event, Emitter<CategoryState> emit) async {
-    // emit(BrandLoadingState());
-    try {
       await CategoryApi.postCategory(event.category);
-      List<Category> categories = await CategoryApi.getCategories();
-      emit(CategoryDataState(categories));
+      emit(const CategoryDataState());
     } catch (e) {
       emit(CategoryErrorState());
     }
   }
 
   void _putCategory(PutCategory event, Emitter<CategoryState> emit) async {
-    // emit(BrandLoadingState());
+    emit(CategoryLoadingState());
     try {
       await CategoryApi.putCategory(event.category.id!, event.category);
-      List<Category> categories = await CategoryApi.getCategories();
-      emit(CategoryDataState(categories));
+      emit(const CategoryDataState());
     } catch (e) {
       emit(CategoryErrorState());
     }

@@ -14,7 +14,6 @@ class CategoryErrorState extends CategoryState {
 }
 
 class CategoryDataState extends CategoryState {
-  final List<Category> categories;
-  const CategoryDataState(this.categories);
-  List<Object?> get props => [categories];
+  const CategoryDataState();
+  List<Object?> get props => [];
 }

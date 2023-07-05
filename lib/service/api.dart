@@ -6,8 +6,8 @@ import 'package:http/http.dart' as http;
 import 'package:fl_wms/service/restclient.dart';
 
 class Api {
-  static const String url = "192.168.0.163:8000";
-  // static const String url = "192.168.100.11:8000";
+  // static const String url = "192.168.0.163:8000";
+  static const String url = "192.168.100.11:8000";
 
   static String baseUrl() => "http://$url/api/";
 
@@ -17,7 +17,7 @@ class Api {
     return RestClient(dio, baseUrl: baseUrl());
   }
 
-  static Future<DataTableModel> getBrandDataTable(
+  static Future<DataTableModel> getDataTable(
     String path, {
     int? draw = 1,
     int? start = 0,
@@ -29,20 +29,16 @@ class Api {
   }) async {
     Map<String, dynamic> map = {
       "draw": draw.toString(),
-      "columns[0][data]": "id",
+      "columns[0][data]": "name",
       "columns[0][searchable]": "true",
       "columns[0][orderable]": "true",
       "columns[0][search][regex]": "false",
-      "columns[1][data]": "name",
+      "columns[1][data]": "is_active",
       "columns[1][searchable]": "true",
       "columns[1][orderable]": "true",
       "columns[1][search][regex]": "false",
-      "columns[2][data]": "is_active",
-      "columns[2][searchable]": "true",
-      "columns[2][orderable]": "true",
+      "columns[2][data]": "id",
       "columns[2][search][regex]": "false",
-      "columns[3][data]": "id",
-      "columns[3][search][regex]": "false",
       "order[0][column]": orderColumn.toString(),
       "order[0][dir]": orderdir,
       "start": start.toString(),
