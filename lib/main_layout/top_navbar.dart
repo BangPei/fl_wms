@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class TopNavbar extends StatelessWidget {
   const TopNavbar({super.key});
@@ -62,7 +63,7 @@ class TopNavbar extends StatelessWidget {
                       color: Colors.red,
                     ),
                     title: const Text("Logout"),
-                    onTap: () {},
+                    onTap: () => context.go("/auth"),
                   ))
                 ];
               },

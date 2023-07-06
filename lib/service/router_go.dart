@@ -3,6 +3,7 @@ import 'package:fl_wms/screen/category/screen/category_screen.dart';
 import 'package:fl_wms/screen/dashboard/screen/dashboard_screen.dart';
 import 'package:fl_wms/main_layout/parent_layout.dart';
 import 'package:fl_wms/screen/brand/screen/brand_screen.dart';
+import 'package:fl_wms/screen/login/screen/login_screen.dart';
 import 'package:fl_wms/screen/uom/screen/uom_screen.dart';
 import 'package:fl_wms/screen/warehouse/screen/warehouse_form_screen.dart';
 import 'package:fl_wms/screen/warehouse/screen/warehouse_screen.dart';
@@ -24,6 +25,15 @@ class RouteNavigation {
     navigatorKey: _nav.navKey,
     initialLocation: '/',
     routes: [
+      GoRoute(
+        // parentNavigatorKey: _dashboardNavigatorKey,
+        path: '/auth',
+        pageBuilder: (context, state) {
+          return NoTransitionPage(
+            child: LoginScreen(),
+          );
+        },
+      ),
       ShellRoute(
         restorationScopeId: "",
         navigatorKey: _dashboardNavigatorKey,
