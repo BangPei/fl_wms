@@ -14,6 +14,7 @@ class WarehouseErrorState extends WarehouseState {
 }
 
 class WarehouseDataState extends WarehouseState {
-  const WarehouseDataState();
-  List<Object?> get props => [];
+  final Warehouse? warehouse;
+  const WarehouseDataState({this.warehouse});
+  List<Object?> get props => [warehouse];
 }

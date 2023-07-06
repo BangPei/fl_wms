@@ -56,38 +56,37 @@ class RouteNavigation {
         },
         routes: [
           GoRoute(
-              parentNavigatorKey: _warehouseNavigatorKey,
-              path: '/warehouse',
-              name: "warehouse",
-              pageBuilder: (context, state) {
-                return const NoTransitionPage(
-                  child: WarehouseScreen(),
-                );
-              },
-              routes: [
-                GoRoute(
-                  parentNavigatorKey: _warehouseNavigatorKey,
-                  path: 'form',
-                  name: "add-warehouse",
-                  pageBuilder: (context, state) {
-                    return const NoTransitionPage(
-                      child: WarehouseFormScreen(),
-                    );
-                  },
+            parentNavigatorKey: _warehouseNavigatorKey,
+            path: '/warehouse',
+            name: "warehouse",
+            pageBuilder: (context, state) {
+              return const NoTransitionPage(
+                child: WarehouseScreen(),
+              );
+            },
+          ),
+          GoRoute(
+            parentNavigatorKey: _warehouseNavigatorKey,
+            path: '/warehouse/form',
+            name: "add-warehouse",
+            pageBuilder: (context, state) {
+              return const NoTransitionPage(
+                child: WarehouseFormScreen(),
+              );
+            },
+          ),
+          GoRoute(
+            parentNavigatorKey: _warehouseNavigatorKey,
+            path: '/warehouse/form/:id',
+            name: "edit-warehouse",
+            pageBuilder: (context, state) {
+              return NoTransitionPage(
+                child: WarehouseFormScreen(
+                  warehouseId: int.parse(state.pathParameters['id']!),
                 ),
-                GoRoute(
-                  parentNavigatorKey: _warehouseNavigatorKey,
-                  path: 'form/:id',
-                  name: "edit-warehouse",
-                  pageBuilder: (context, state) {
-                    return NoTransitionPage(
-                      child: WarehouseFormScreen(
-                        warehouseId: int.parse(state.pathParameters['id']!),
-                      ),
-                    );
-                  },
-                ),
-              ]),
+              );
+            },
+          ),
         ],
       ),
       ShellRoute(

@@ -45,7 +45,7 @@ class Warehouse {
     data['pic'] = pic;
     data['pic_phone'] = picPhone;
     data['phone'] = phone;
-    data['is_active'] = (isActive == true) ? 1 : 0;
+    data['is_active'] = isActive;
     return data;
   }
 }

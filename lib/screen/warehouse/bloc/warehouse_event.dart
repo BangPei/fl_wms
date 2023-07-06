@@ -9,6 +9,11 @@ class GetWarehouses extends WarehouseEvent {
   const GetWarehouses();
 }
 
+class GetWarehouseById extends WarehouseEvent {
+  final int id;
+  const GetWarehouseById(this.id);
+}
+
 class PostWarehouse extends WarehouseEvent {
   final Warehouse warehouse;
   const PostWarehouse(this.warehouse);

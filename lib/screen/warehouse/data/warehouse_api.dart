@@ -14,6 +14,12 @@ class WarehouseApi {
     return data;
   }
 
+  static Future<Warehouse> getWarehouseByCode(String code) async {
+    final client = await Api.restClient();
+    var data = client.getWarehouseByCode(code);
+    return data;
+  }
+
   static Future postWarehouse(Warehouse wa) async {
     final client = await Api.restClient();
     var data = client.postWarehouse(wa);

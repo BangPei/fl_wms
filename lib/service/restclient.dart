@@ -59,6 +59,9 @@ abstract class RestClient {
   @GET("warehouse")
   Future<List<Warehouse>> getWarehouses();
 
+  @GET("warehouse/code/{code}")
+  Future<Warehouse> getWarehouseByCode(@Path() String code);
+
   @GET("warehouse/{id}")
   Future<Warehouse> getWarehouse(@Path() int id);
 

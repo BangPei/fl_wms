@@ -8,8 +8,20 @@ part 'warehouse_state.dart';
 
 class WarehouseBloc extends Bloc<WarehouseEvent, WarehouseState> {
   WarehouseBloc() : super(const WarehouseDataState()) {
+    on<GetWarehouseById>(_getWarehouseById);
     on<PostWarehouse>(_postWarehouse);
     on<PutWarehouse>(_putWarehouse);
+  }
+
+  void _getWarehouseById(
+      GetWarehouseById event, Emitter<WarehouseState> emit) async {
+    emit(WarehouseLoadingState());
+    try {
+      Warehouse warehouse = await WarehouseApi.getWarehouse(event.id);
+      emit(WarehouseDataState(warehouse: warehouse));
+    } catch (e) {
+      emit(WarehouseErrorState());
+    }
   }
 
   void _postWarehouse(PostWarehouse event, Emitter<WarehouseState> emit) async {

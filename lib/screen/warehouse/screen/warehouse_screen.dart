@@ -53,7 +53,7 @@ class _WarehouseScreenState extends State<WarehouseScreen> {
                           label: const Text("PIC Name"), onSort: setSort),
                       DataColumn(
                           label: const Text("PIC Phone"), onSort: setSort),
-                      DataColumn(label: const Text("Address"), onSort: setSort),
+                      // DataColumn(label: const Text("Address"), onSort: setSort),
                       DataColumn(label: const Text("Phone"), onSort: setSort),
                       DataColumn(label: const Text("Status"), onSort: setSort),
                       const DataColumn(label: Text("Action")),

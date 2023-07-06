@@ -33,7 +33,7 @@ class WarehouseSource extends AdvancedDataTableSource<Warehouse> {
           DataCell(Text("")),
           DataCell(Text("")),
           DataCell(Text("")),
-          DataCell(Text("")),
+          // DataCell(Text("")),
           DataCell(Text("")),
         ],
       );
@@ -52,7 +52,13 @@ class WarehouseSource extends AdvancedDataTableSource<Warehouse> {
         DataCell(SelectableText(e.name ?? "")),
         DataCell(SelectableText(e.pic ?? "")),
         DataCell(SelectableText(e.picPhone ?? "")),
-        DataCell(SelectableText(e.address ?? "")),
+        // DataCell(SizedBox(
+        //   width: 200,
+        //   child: SelectableText(
+        //     e.address ?? "",
+        //     // overflow: TextOverflow.fade,
+        //   ),
+        // )),
         DataCell(SelectableText(e.phone ?? "")),
         DataCell(badges.Badge(
           badgeContent: Text(
