@@ -23,6 +23,7 @@ class _ProductScreenState extends State<ProductScreen> {
   var sortIndex = 0;
   var sortAsc = true;
 
+  int currIdx = 0;
   int start = 0;
   int length = 10;
   int orderColumn = 0;
@@ -77,21 +78,29 @@ class _ProductScreenState extends State<ProductScreen> {
                             return ListViewProduct(product: product);
                           },
                         ),
-                        Center(
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: SizedBox(
-                              // height: 40,
-                              width: MediaQuery.of(context).size.width / 2,
-                              child: NumberPaginator(
-                                numberPages:
-                                    ((state.dataTable?.recordsFiltered ?? 0) /
-                                            length)
-                                        .ceil(),
-                                onPageChange: (int index) {
-                                  print(index);
-                                },
-                              ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: SizedBox(
+                            width: MediaQuery.of(context).size.width / 3,
+                            child: NumberPaginator(
+                              initialPage: currIdx,
+                              numberPages:
+                                  ((state.dataTable?.recordsFiltered ?? 0) /
+                                          length)
+                                      .ceil(),
+                              onPageChange: (int index) {
+                                setState(() {
+                                  currIdx = index;
+                                  start = length * index;
+                                  context.read<ProductBloc>().add(GetDataTable(
+                                        length: length,
+                                        start: start,
+                                        orderColumn: orderColumn,
+                                        orderDir: orderDir,
+                                        search: search,
+                                      ));
+                                });
+                              },
                             ),
                           ),
                         ),
