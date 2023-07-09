@@ -15,7 +15,7 @@ import '../library/interceptor/injector.dart';
 final NavigationService _nav = locator<NavigationService>();
 final GlobalKey<NavigatorState> _dashboardNavigatorKey =
     GlobalKey<NavigatorState>(debugLabel: 'dashboard');
-final GlobalKey<NavigatorState> _masterNavigatorKey =
+final GlobalKey<NavigatorState> _productNavigatorKey =
     GlobalKey<NavigatorState>(debugLabel: 'shell');
 final GlobalKey<NavigatorState> _warehouseNavigatorKey =
     GlobalKey<NavigatorState>(debugLabel: 'shell');
@@ -100,13 +100,49 @@ class RouteNavigation {
         ],
       ),
       ShellRoute(
-        navigatorKey: _masterNavigatorKey,
+        restorationScopeId: "",
+        navigatorKey: _productNavigatorKey,
         builder: (BuildContext context, GoRouterState state, Widget child) {
-          return ParentLayout(menu: "master", child: child);
+          return ParentLayout(
+            menu: "product",
+            child: child,
+          );
         },
         routes: [
           GoRoute(
-            parentNavigatorKey: _masterNavigatorKey,
+            parentNavigatorKey: _productNavigatorKey,
+            path: '/product',
+            name: "product",
+            pageBuilder: (context, state) {
+              return const NoTransitionPage(
+                child: WarehouseScreen(),
+              );
+            },
+          ),
+          GoRoute(
+            parentNavigatorKey: _productNavigatorKey,
+            path: '/product/form',
+            name: "add-product",
+            pageBuilder: (context, state) {
+              return const NoTransitionPage(
+                child: WarehouseFormScreen(),
+              );
+            },
+          ),
+          GoRoute(
+            parentNavigatorKey: _productNavigatorKey,
+            path: '/product/form/:id',
+            name: "edit-product",
+            pageBuilder: (context, state) {
+              return NoTransitionPage(
+                child: WarehouseFormScreen(
+                  warehouseId: int.parse(state.pathParameters['id']!),
+                ),
+              );
+            },
+          ),
+          GoRoute(
+            parentNavigatorKey: _productNavigatorKey,
             path: '/brand',
             name: "brand",
             pageBuilder: (context, state) {
@@ -118,7 +154,7 @@ class RouteNavigation {
             },
           ),
           GoRoute(
-            parentNavigatorKey: _masterNavigatorKey,
+            parentNavigatorKey: _productNavigatorKey,
             path: '/category',
             name: "category",
             pageBuilder: (context, state) {
@@ -130,7 +166,7 @@ class RouteNavigation {
             },
           ),
           GoRoute(
-            parentNavigatorKey: _masterNavigatorKey,
+            parentNavigatorKey: _productNavigatorKey,
             path: '/uom',
             name: "uom",
             pageBuilder: (context, state) {

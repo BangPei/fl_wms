@@ -150,36 +150,6 @@ class _MainMenuState extends State<MainMenu> {
       children: [
         LeftExpantionTile(
           visibility: widget.size > 60,
-          title: "Master",
-          menu: widget.menu,
-          icon: FontAwesomeIcons.toolbox,
-          children: widget.size > 60
-              ? [
-                  const LeftListTile(
-                    title: "Brand",
-                    routeName: "brand",
-                  ),
-                  const LeftListTile(
-                    title: "Category",
-                    routeName: "category",
-                  ),
-                  const LeftListTile(
-                    title: "UOM",
-                    routeName: "uom",
-                  ),
-                  const LeftListTile(
-                    title: "Palette",
-                    routeName: "palette",
-                  ),
-                  const LeftListTile(
-                    title: "Rack",
-                    routeName: "rack",
-                  ),
-                ]
-              : [],
-        ),
-        LeftExpantionTile(
-          visibility: widget.size > 60,
           title: "Product",
           menu: widget.menu,
           icon: FontAwesomeIcons.productHunt,
@@ -193,6 +163,18 @@ class _MainMenuState extends State<MainMenu> {
                   const LeftListTile(
                     title: "Add Product",
                     routeName: "product-form",
+                  ),
+                  const LeftListTile(
+                    title: "Brand",
+                    routeName: "brand",
+                  ),
+                  const LeftListTile(
+                    title: "Category",
+                    routeName: "category",
+                  ),
+                  const LeftListTile(
+                    title: "UOM",
+                    routeName: "uom",
                   ),
                 ]
               : [],
@@ -211,6 +193,14 @@ class _MainMenuState extends State<MainMenu> {
                   const LeftListTile(
                     title: "Add Warehouse",
                     routeName: "warehouse/form",
+                  ),
+                  const LeftListTile(
+                    title: "Palette",
+                    routeName: "palette",
+                  ),
+                  const LeftListTile(
+                    title: "Rack",
+                    routeName: "rack",
                   ),
                 ]
               : [],
