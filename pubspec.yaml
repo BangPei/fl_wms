@@ -44,6 +44,8 @@ dependencies:
   shimmer: ^3.0.0
   badges: ^3.1.1
   http: ^1.0.0
+  number_paginator: ^0.2.3
+  web_smooth_scroll: ^1.1.0
   flutter:
     sdk: flutter
 

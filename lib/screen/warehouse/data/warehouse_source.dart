@@ -60,30 +60,33 @@ class WarehouseSource extends AdvancedDataTableSource<Warehouse> {
         //   ),
         // )),
         DataCell(SelectableText(e.phone ?? "")),
-        DataCell(badges.Badge(
-          badgeContent: Text(
-            e.isActive! ? "Active" : "Inactive",
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 10,
+        DataCell(
+          badges.Badge(
+            badgeContent: Text(
+              e.isActive! ? "Active" : "Inactive",
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 10,
+              ),
+            ),
+            badgeAnimation: const badges.BadgeAnimation.rotation(
+              animationDuration: Duration(seconds: 1),
+              colorChangeAnimationDuration: Duration(seconds: 1),
+              loopAnimation: false,
+              curve: Curves.fastOutSlowIn,
+              colorChangeAnimationCurve: Curves.easeInCubic,
+            ),
+            badgeStyle: badges.BadgeStyle(
+              shape: badges.BadgeShape.square,
+              badgeColor: e.isActive!
+                  ? BootstrapColors.success
+                  : BootstrapColors.danger,
+              padding: const EdgeInsets.all(3),
+              borderRadius: BorderRadius.circular(9),
+              elevation: 0,
             ),
           ),
-          badgeAnimation: const badges.BadgeAnimation.rotation(
-            animationDuration: Duration(seconds: 1),
-            colorChangeAnimationDuration: Duration(seconds: 1),
-            loopAnimation: false,
-            curve: Curves.fastOutSlowIn,
-            colorChangeAnimationCurve: Curves.easeInCubic,
-          ),
-          badgeStyle: badges.BadgeStyle(
-            shape: badges.BadgeShape.square,
-            badgeColor:
-                e.isActive! ? BootstrapColors.success : BootstrapColors.danger,
-            padding: const EdgeInsets.all(3),
-            borderRadius: BorderRadius.circular(9),
-            elevation: 0,
-          ),
-        )),
+        ),
         DataCell(Row(
           children: [
             GestureDetector(

@@ -1,6 +1,7 @@
 import 'package:fl_wms/library/interceptor/injector.dart';
 import 'package:fl_wms/screen/brand/bloc/brand_bloc.dart';
 import 'package:fl_wms/screen/category/bloc/category_bloc.dart';
+import 'package:fl_wms/screen/product/bloc/product_bloc.dart';
 import 'package:fl_wms/screen/uom/bloc/uom_bloc.dart';
 import 'package:fl_wms/screen/warehouse/bloc/warehouse_bloc.dart';
 import 'package:fl_wms/service/router_go.dart';
@@ -24,6 +25,7 @@ class MyApp extends StatelessWidget {
         BlocProvider<CategoryBloc>(create: (__) => CategoryBloc()),
         BlocProvider<UomBloc>(create: (__) => UomBloc()),
         BlocProvider<WarehouseBloc>(create: (__) => WarehouseBloc()),
+        BlocProvider<ProductBloc>(create: (__) => ProductBloc()),
       ],
       child: MaterialApp.router(
         debugShowCheckedModeBanner: false,

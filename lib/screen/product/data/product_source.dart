@@ -187,11 +187,11 @@ class ProductSource extends AdvancedDataTableSource<Product> {
       };
       DataTableModel dataTable =
           await Api.getDataTable("/api/product/dataTable", query: map);
-      List<Product> warehouses =
+      List<Product> product =
           (dataTable.data ?? []).map((e) => Product.fromJson(e)).toList();
       return RemoteDataSourceDetails(
         dataTable.recordsTotal ?? 0,
-        warehouses,
+        product,
         filteredRows: dataTable.recordsFiltered,
       );
     } catch (e) {
