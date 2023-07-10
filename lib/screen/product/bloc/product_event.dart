@@ -25,6 +25,16 @@ class PostProduct extends ProductEvent {
   const PostProduct(this.product);
 }
 
+class GetProductById extends ProductEvent {
+  final int id;
+  const GetProductById(this.id);
+}
+
+class ProductStandbyForm extends ProductEvent {
+  final int? id;
+  const ProductStandbyForm({this.id});
+}
+
 class PutProduct extends ProductEvent {
   final Product product;
   const PutProduct(this.product);

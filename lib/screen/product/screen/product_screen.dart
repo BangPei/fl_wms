@@ -1,3 +1,4 @@
+import 'package:fl_wms/models/datatable_model.dart';
 import 'package:fl_wms/screen/product/bloc/product_bloc.dart';
 import 'package:fl_wms/screen/product/data/product.dart';
 import 'package:fl_wms/widget/card_template.dart';
@@ -28,7 +29,7 @@ class _ProductScreenState extends State<ProductScreen> {
   int length = 10;
   int orderColumn = 0;
   String orderDir = "asc";
-  String search = "";
+  TextEditingController search = TextEditingController();
   late ScrollController _scrollController;
 
   @override
@@ -39,7 +40,7 @@ class _ProductScreenState extends State<ProductScreen> {
           start: start,
           orderColumn: orderColumn,
           orderDir: orderDir,
-          search: search,
+          search: search.text,
         ));
     super.initState();
   }
@@ -59,7 +60,7 @@ class _ProductScreenState extends State<ProductScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 8),
                 child: DefaultCardTitle(
                   title,
-                  onPressed: () => context.goNamed("add-warehouse"),
+                  onPressed: () => context.goNamed("add-product"),
                   showAddButton: true,
                 ),
               ),
@@ -70,6 +71,39 @@ class _ProductScreenState extends State<ProductScreen> {
                   } else if (state is ProductDataState) {
                     return Column(
                       children: [
+                        FilterRow(
+                          initialValueDropdown: length,
+                          searchController: search,
+                          dropDownChange: (val) {
+                            if (val != length) {
+                              setState(() {
+                                length = val!;
+                                context.read<ProductBloc>().add(GetDataTable(
+                                      length: length,
+                                      start: 0,
+                                      orderColumn: orderColumn,
+                                      orderDir: orderDir,
+                                      search: search.text,
+                                    ));
+                              });
+                            }
+                          },
+                          onFieldSubmitted: (val) {
+                            setState(() {
+                              context.read<ProductBloc>().add(GetDataTable(
+                                    length: length,
+                                    start: 0,
+                                    orderColumn: orderColumn,
+                                    orderDir: orderDir,
+                                    search: val,
+                                  ));
+                              context.goNamed(
+                                "product",
+                                queryParameters: {"q": val},
+                              );
+                            });
+                          },
+                        ),
                         ListView.builder(
                           shrinkWrap: true,
                           itemCount: state.products.length,
@@ -84,22 +118,23 @@ class _ProductScreenState extends State<ProductScreen> {
                             width: MediaQuery.of(context).size.width / 3,
                             child: NumberPaginator(
                               initialPage: currIdx,
-                              numberPages:
-                                  ((state.dataTable?.recordsFiltered ?? 0) /
-                                          length)
-                                      .ceil(),
+                              numberPages: getPage(state.dataTable!),
                               onPageChange: (int index) {
-                                setState(() {
-                                  currIdx = index;
-                                  start = length * index;
-                                  context.read<ProductBloc>().add(GetDataTable(
-                                        length: length,
-                                        start: start,
-                                        orderColumn: orderColumn,
-                                        orderDir: orderDir,
-                                        search: search,
-                                      ));
-                                });
+                                if (state.products.isNotEmpty) {
+                                  setState(() {
+                                    currIdx = index;
+                                    start = length * index;
+                                    context
+                                        .read<ProductBloc>()
+                                        .add(GetDataTable(
+                                          length: length,
+                                          start: start,
+                                          orderColumn: orderColumn,
+                                          orderDir: orderDir,
+                                          search: search.text,
+                                        ));
+                                  });
+                                }
                               },
                             ),
                           ),
@@ -117,11 +152,83 @@ class _ProductScreenState extends State<ProductScreen> {
     );
   }
 
+  int getPage(DataTableModel data) {
+    int pageLength = 1;
+    if ((data.recordsFiltered ?? 0) > length) {
+      return pageLength = ((data.recordsFiltered ?? 0) / length).ceil();
+    }
+    return pageLength;
+  }
+
   void setSort(int i, bool asc) {
     setState(() {
       sortIndex = i;
       sortAsc = asc;
     });
+  }
+}
+
+class FilterRow extends StatelessWidget {
+  final ValueChanged<String>? onFieldSubmitted;
+  final ValueChanged<int?>? dropDownChange;
+  final int initialValueDropdown;
+  final TextEditingController searchController;
+  const FilterRow({
+    super.key,
+    this.onFieldSubmitted,
+    this.dropDownChange,
+    required this.initialValueDropdown,
+    required this.searchController,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            SizedBox(
+              width: 200,
+              child: DropdownButtonFormField<int>(
+                decoration: const BootstrapInputDecoration(),
+                value: initialValueDropdown,
+                items: const [
+                  DropdownMenuItem(
+                    value: 10,
+                    child: Text("10 Items Per Page"),
+                  ),
+                  DropdownMenuItem(
+                    value: 25,
+                    child: Text("25 Items Per Page"),
+                  ),
+                  DropdownMenuItem(
+                    value: 50,
+                    child: Text("50 Items Per Page"),
+                  ),
+                  DropdownMenuItem(
+                    value: 100,
+                    child: Text("100 Items Per Page"),
+                  ),
+                ],
+                onChanged: dropDownChange,
+              ),
+            ),
+            SizedBox(
+              width: 200,
+              child: TextFormField(
+                controller: searchController,
+                onFieldSubmitted: onFieldSubmitted,
+                decoration: const BootstrapInputDecoration(
+                  labelText: "Search",
+                ),
+              ),
+            )
+          ],
+        ),
+      ),
+    );
   }
 }
 
@@ -187,14 +294,14 @@ class ListViewProduct extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
+                        SelectableText(
                           "Code : ${product?.code ?? '--'}",
                           style: style.copyWith(
                             color: Colors.indigo,
                           ),
                         ),
                         const SizedBox(height: 2),
-                        Text(
+                        SelectableText(
                           (product?.name != "" && product?.name != null)
                               ? product!.name!
                               : "Morinaga Chil go 3+ Vanila 700 gr Susu Pertumbuhan Anak",
