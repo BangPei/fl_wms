@@ -89,6 +89,7 @@ class _ProductScreenState extends State<ProductScreen> {
                             }
                           },
                           onFieldSubmitted: (val) {
+                            // context.read<ProductBloc>().add(SearchProduct(val));
                             setState(() {
                               context.read<ProductBloc>().add(GetDataTable(
                                     length: length,
@@ -97,10 +98,6 @@ class _ProductScreenState extends State<ProductScreen> {
                                     orderDir: orderDir,
                                     search: val,
                                   ));
-                              context.goNamed(
-                                "product",
-                                queryParameters: {"q": val},
-                              );
                             });
                           },
                         ),

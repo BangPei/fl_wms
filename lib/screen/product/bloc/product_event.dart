@@ -20,6 +20,11 @@ class GetDataTable extends ProductEvent {
   });
 }
 
+class SearchProduct extends ProductEvent {
+  final String str;
+  const SearchProduct(this.str);
+}
+
 class PostProduct extends ProductEvent {
   final Product product;
   const PostProduct(this.product);
