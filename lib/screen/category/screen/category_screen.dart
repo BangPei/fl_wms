@@ -1,5 +1,5 @@
 import 'package:fl_wms/screen/category/bloc/category_bloc.dart';
-import 'package:fl_wms/screen/category/data/category.dart';
+import 'package:fl_wms/screen/category/data/item_category.dart';
 import 'package:fl_wms/screen/category/data/category_source.dart';
 import 'package:fl_wms/widget/advance_table.dart';
 import 'package:fl_wms/widget/card_template.dart';
@@ -40,7 +40,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                   } else if (state is CategoryErrorState) {
                     const Text("Error Page");
                   }
-                  return AdvanceTable<Category>(
+                  return AdvanceTable<ItemCategory>(
                     title: title,
                     source: categorySource,
                     onSearch: (value) => categorySource.filterServerSide(value),

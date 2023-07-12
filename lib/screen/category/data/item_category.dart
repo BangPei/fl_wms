@@ -1,13 +1,14 @@
-class Category {
+class ItemCategory {
   int? id;
   String? name;
   bool? isActive;
   String? createdAt;
   String? updatedAt;
 
-  Category({this.id, this.name, this.isActive, this.createdAt, this.updatedAt});
+  ItemCategory(
+      {this.id, this.name, this.isActive, this.createdAt, this.updatedAt});
 
-  Category.fromJson(Map<String, dynamic> json) {
+  ItemCategory.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];
     isActive = json['is_active'];

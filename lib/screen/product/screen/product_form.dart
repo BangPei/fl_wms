@@ -1,15 +1,21 @@
+import 'dart:io';
+
+import 'package:dotted_border/dotted_border.dart';
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:fl_wms/screen/brand/data/brand.dart';
+import 'package:fl_wms/screen/category/data/item_category.dart';
 import 'package:fl_wms/screen/product/bloc/product_bloc.dart';
 import 'package:fl_wms/screen/product/data/product.dart';
 import 'package:fl_wms/widget/card_template.dart';
 import 'package:fl_wms/widget/loading_shimmer.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_advanced_switch/flutter_advanced_switch.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bootstrap_widgets/bootstrap_widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:reactive_dropdown_search/reactive_dropdown_search.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:responsive_grid/responsive_grid.dart';
 
@@ -25,6 +31,11 @@ class _ProductFormState extends State<ProductForm> {
   String title = "";
   bool isActive = true;
   bool readOnly = false;
+  ItemCategory category = ItemCategory();
+  Brand brand = Brand();
+  Product product = Product();
+  File? image;
+  Uint8List webImage = Uint8List(8);
   final _controller = ValueNotifier<bool>(true);
   final formgroup = FormGroup({
     'code': FormControl<String>(
@@ -46,18 +57,16 @@ class _ProductFormState extends State<ProductForm> {
     'moving': FormControl<String>(
       value: 'FAST',
     ),
-    'brand': FormControl<Brand>(),
-    'category': FormControl<String>(),
     'reminder_qty': FormControl<int>(
       // value: 0,
       validators: [Validators.required],
     ),
     'is_active': FormControl<bool>(value: true)
   });
-  Product product = Product();
+
   @override
   void initState() {
-    title = widget.id != null ? "Edit Product" : "Product Form";
+    title = widget.id != null ? "Edit Product" : "Add Product";
     _controller.addListener(() {
       isActive = _controller.value;
       formgroup.control('is_active').value = isActive;
@@ -145,9 +154,9 @@ class _ProductFormState extends State<ProductForm> {
                               ),
                             ),
                             ResponsiveGridCol(
-                              lg: 3,
-                              xl: 3,
-                              md: 3,
+                              lg: 4,
+                              xl: 4,
+                              md: 4,
                               sm: 12,
                               child: Padding(
                                 padding: const EdgeInsets.symmetric(
@@ -157,52 +166,31 @@ class _ProductFormState extends State<ProductForm> {
                                     const BootstrapLabelText(
                                       child: SelectableText('Brand'),
                                     ),
-                                    ReactiveDropdownSearch<Brand, Brand>(
-                                      formControlName: 'brand',
+                                    DropdownSearch<Brand>(
+                                      itemAsString: (item) => item.name ?? "",
+                                      popupProps: const PopupProps.menu(
+                                        showSearchBox: true,
+                                      ),
+                                      items: state.brands ?? [],
+                                      dropdownBuilder: (c, b) {
+                                        return Text(b?.name ?? "");
+                                      },
                                       dropdownDecoratorProps:
                                           const DropDownDecoratorProps(
                                         dropdownSearchDecoration:
-                                            InputDecoration(
-                                          hintText: "Select a Brand",
-                                          helperText: '',
-                                          contentPadding:
-                                              EdgeInsets.fromLTRB(12, 12, 0, 0),
-                                          border: OutlineInputBorder(),
-                                        ),
+                                            BootstrapInputDecoration(),
                                       ),
-                                      popupProps: PopupProps.menu(
-                                        title: const Text("List Brand"),
-                                        // showSelectedItems: true,
-                                        showSearchBox: true,
-                                        itemBuilder:
-                                            (context, item, isSelected) {
-                                          return ListTile(
-                                            title: Text(item.name ?? ""),
-                                          );
-                                        },
-                                      ),
-                                      showClearButton: true,
-                                      dropdownBuilder: (c, s) {
-                                        return Text(s?.name ?? "");
-                                      },
-                                      onBeforeChange: (b, c) async {
-                                        print(b);
-                                        print(c);
-                                        return true;
-                                      },
-                                      items: (state.brands ?? [])
-                                      // .map((e) => e.name ?? "")
-                                      // .toList(),
-                                      ,
+                                      onChanged: (br) => brand = br!,
+                                      selectedItem: brand,
                                     ),
                                   ],
                                 ),
                               ),
                             ),
                             ResponsiveGridCol(
-                              lg: 3,
-                              xl: 3,
-                              md: 3,
+                              lg: 4,
+                              xl: 4,
+                              md: 4,
                               sm: 12,
                               child: Padding(
                                 padding: const EdgeInsets.symmetric(
@@ -212,125 +200,28 @@ class _ProductFormState extends State<ProductForm> {
                                     const BootstrapLabelText(
                                       child: SelectableText('Category'),
                                     ),
-                                    ReactiveDropdownSearch<String, String>(
-                                      formControlName: 'category',
+                                    DropdownSearch<ItemCategory>(
+                                      itemAsString: (item) => item.name ?? "",
+                                      popupProps: const PopupProps.menu(
+                                        showSearchBox: true,
+                                      ),
+                                      items: state.categories ?? [],
                                       dropdownDecoratorProps:
                                           const DropDownDecoratorProps(
                                         dropdownSearchDecoration:
-                                            InputDecoration(
-                                          hintText: "Select a Category",
-                                          helperText: '',
-                                          contentPadding:
-                                              EdgeInsets.fromLTRB(12, 12, 0, 0),
-                                          border: OutlineInputBorder(),
-                                        ),
+                                            BootstrapInputDecoration(),
                                       ),
-                                      popupProps: const PopupProps.menu(
-                                        showSelectedItems: true,
-                                        // disabledItemFn: (s) =>s,
-                                      ),
-                                      items: (state.categories ?? [])
-                                          .map((e) => e.name ?? "")
-                                          .toList(),
-                                      showClearButton: true,
+                                      onChanged: (ct) => category = ct!,
+                                      selectedItem: category,
                                     ),
                                   ],
                                 ),
                               ),
                             ),
                             ResponsiveGridCol(
-                              lg: 3,
-                              xl: 3,
-                              md: 3,
-                              sm: 12,
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 16.0, vertical: 2),
-                                child: BootstrapFormGroup(
-                                  children: [
-                                    const BootstrapLabelText(
-                                      child: SelectableText('Reminder Qty'),
-                                    ),
-                                    ReactiveTextField(
-                                      textAlign: TextAlign.end,
-                                      formControlName: 'reminder_qty',
-                                      keyboardType: TextInputType.number,
-                                      inputFormatters: <TextInputFormatter>[
-                                        FilteringTextInputFormatter.digitsOnly
-                                      ],
-                                      onSubmitted: (val) {},
-                                      decoration:
-                                          const BootstrapInputDecoration(
-                                              hintText: "0"),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            ResponsiveGridCol(
-                              lg: 3,
-                              xl: 3,
-                              md: 3,
-                              sm: 12,
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 16.0, vertical: 2),
-                                child: BootstrapFormGroup(
-                                  children: [
-                                    const BootstrapLabelText(
-                                      child: SelectableText(
-                                          'Max ED IN (in month)'),
-                                    ),
-                                    ReactiveTextField(
-                                      textAlign: TextAlign.end,
-                                      keyboardType: TextInputType.number,
-                                      inputFormatters: <TextInputFormatter>[
-                                        FilteringTextInputFormatter.digitsOnly
-                                      ],
-                                      formControlName: 'in_expired_date',
-                                      onSubmitted: (val) {},
-                                      decoration:
-                                          const BootstrapInputDecoration(
-                                              hintText: "0"),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            ResponsiveGridCol(
-                              lg: 3,
-                              xl: 3,
-                              md: 3,
-                              sm: 12,
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 16.0, vertical: 2),
-                                child: BootstrapFormGroup(
-                                  children: [
-                                    const BootstrapLabelText(
-                                      child: SelectableText(
-                                          'Max ED OUT (in month)'),
-                                    ),
-                                    ReactiveTextField(
-                                      textAlign: TextAlign.end,
-                                      keyboardType: TextInputType.number,
-                                      inputFormatters: <TextInputFormatter>[
-                                        FilteringTextInputFormatter.digitsOnly
-                                      ],
-                                      formControlName: 'out_expired_date',
-                                      onSubmitted: (val) {},
-                                      decoration:
-                                          const BootstrapInputDecoration(
-                                              hintText: "0"),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            ResponsiveGridCol(
-                              lg: 3,
-                              xl: 3,
-                              md: 3,
+                              lg: 4,
+                              xl: 4,
+                              md: 4,
                               sm: 12,
                               child: Padding(
                                 padding: const EdgeInsets.symmetric(
@@ -363,34 +254,210 @@ class _ProductFormState extends State<ProductForm> {
                               ),
                             ),
                             ResponsiveGridCol(
-                              lg: 6,
-                              xl: 6,
-                              md: 6,
-                              sm: 12,
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 16.0, vertical: 2),
-                                child: BootstrapFormGroup(
-                                  direction: Axis.horizontal,
-                                  children: [
-                                    const BootstrapLabelText(
-                                      child: SelectableText('Status'),
+                              child: ResponsiveGridRow(
+                                children: [
+                                  ResponsiveGridCol(
+                                    lg: 3,
+                                    md: 3,
+                                    xl: 3,
+                                    sm: 12,
+                                    xs: 12,
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 16.0, vertical: 2),
+                                      child: DottedBorder(
+                                        borderType: BorderType.RRect,
+                                        radius: const Radius.circular(12),
+                                        padding: const EdgeInsets.all(6),
+                                        child: ClipRRect(
+                                          borderRadius: const BorderRadius.all(
+                                              Radius.circular(12)),
+                                          child: GestureDetector(
+                                            onTap: () => picPicture(),
+                                            child: image != null
+                                                ? Image.memory(
+                                                    webImage,
+                                                    fit: BoxFit.fill,
+                                                  )
+                                                : Container(
+                                                    height: 150,
+                                                    color: const Color.fromARGB(
+                                                        255, 253, 253, 249),
+                                                    child: const Center(
+                                                      child: Column(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                          Icon(
+                                                            Icons
+                                                                .picture_in_picture_sharp,
+                                                            color:
+                                                                Colors.indigo,
+                                                          ),
+                                                          SizedBox(height: 10),
+                                                          Text("Select Picture",
+                                                              style: TextStyle(
+                                                                color: Colors
+                                                                    .indigo,
+                                                              )),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
+                                          ),
+                                        ),
+                                      ),
                                     ),
-                                    AdvancedSwitch(
-                                      controller: _controller,
-                                      activeColor: BootstrapColors.success,
-                                      inactiveColor: BootstrapColors.danger,
-                                      activeChild: const Text('Active'),
-                                      inactiveChild: const Text('Inactive'),
-                                      borderRadius: const BorderRadius.all(
-                                          Radius.circular(15)),
-                                      width: 90.0,
-                                      height: 35.0,
-                                      enabled: true,
-                                      disabledOpacity: 0.5,
+                                  ),
+                                  ResponsiveGridCol(
+                                    lg: 9,
+                                    md: 9,
+                                    xl: 9,
+                                    sm: 12,
+                                    xs: 12,
+                                    child: ResponsiveGridRow(
+                                      children: [
+                                        ResponsiveGridCol(
+                                          lg: 4,
+                                          xl: 4,
+                                          md: 4,
+                                          sm: 12,
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 16.0, vertical: 2),
+                                            child: BootstrapFormGroup(
+                                              children: [
+                                                const BootstrapLabelText(
+                                                  child: SelectableText(
+                                                      'Max ED IN (in month)'),
+                                                ),
+                                                ReactiveTextField(
+                                                  textAlign: TextAlign.end,
+                                                  keyboardType:
+                                                      TextInputType.number,
+                                                  inputFormatters: <TextInputFormatter>[
+                                                    FilteringTextInputFormatter
+                                                        .digitsOnly
+                                                  ],
+                                                  formControlName:
+                                                      'in_expired_date',
+                                                  onSubmitted: (val) {},
+                                                  decoration:
+                                                      const BootstrapInputDecoration(
+                                                          hintText: "0"),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                        ResponsiveGridCol(
+                                          lg: 4,
+                                          xl: 4,
+                                          md: 4,
+                                          sm: 12,
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 16.0, vertical: 2),
+                                            child: BootstrapFormGroup(
+                                              children: [
+                                                const BootstrapLabelText(
+                                                  child: SelectableText(
+                                                      'Max ED OUT (in month)'),
+                                                ),
+                                                ReactiveTextField(
+                                                  textAlign: TextAlign.end,
+                                                  keyboardType:
+                                                      TextInputType.number,
+                                                  inputFormatters: <TextInputFormatter>[
+                                                    FilteringTextInputFormatter
+                                                        .digitsOnly
+                                                  ],
+                                                  formControlName:
+                                                      'out_expired_date',
+                                                  onSubmitted: (val) {},
+                                                  decoration:
+                                                      const BootstrapInputDecoration(
+                                                          hintText: "0"),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                        ResponsiveGridCol(
+                                          lg: 4,
+                                          xl: 4,
+                                          md: 4,
+                                          sm: 12,
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 16.0, vertical: 2),
+                                            child: BootstrapFormGroup(
+                                              children: [
+                                                const BootstrapLabelText(
+                                                  child: SelectableText(
+                                                      'Reminder Qty'),
+                                                ),
+                                                ReactiveTextField(
+                                                  textAlign: TextAlign.end,
+                                                  formControlName:
+                                                      'reminder_qty',
+                                                  keyboardType:
+                                                      TextInputType.number,
+                                                  inputFormatters: <TextInputFormatter>[
+                                                    FilteringTextInputFormatter
+                                                        .digitsOnly
+                                                  ],
+                                                  onSubmitted: (val) {},
+                                                  decoration:
+                                                      const BootstrapInputDecoration(
+                                                          hintText: "0"),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                        ResponsiveGridCol(
+                                          lg: 4,
+                                          xl: 4,
+                                          md: 4,
+                                          sm: 12,
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 16.0, vertical: 25),
+                                            child: BootstrapFormGroup(
+                                              direction: Axis.horizontal,
+                                              children: [
+                                                const BootstrapLabelText(
+                                                  child:
+                                                      SelectableText('Status'),
+                                                ),
+                                                AdvancedSwitch(
+                                                  controller: _controller,
+                                                  activeColor:
+                                                      BootstrapColors.success,
+                                                  inactiveColor:
+                                                      BootstrapColors.danger,
+                                                  activeChild:
+                                                      const Text('Active'),
+                                                  inactiveChild:
+                                                      const Text('Inactive'),
+                                                  borderRadius:
+                                                      const BorderRadius.all(
+                                                          Radius.circular(15)),
+                                                  width: 90.0,
+                                                  height: 35.0,
+                                                  enabled: true,
+                                                  disabledOpacity: 0.5,
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
                             ),
                             ResponsiveGridCol(
@@ -402,8 +469,8 @@ class _ProductFormState extends State<ProductForm> {
                                 padding: const EdgeInsets.only(
                                   left: 16.0,
                                   right: 16,
-                                  top: 4,
-                                  bottom: 8,
+                                  top: 25,
+                                  bottom: 25,
                                 ),
                                 child: Center(
                                   child: SizedBox(
@@ -414,6 +481,9 @@ class _ProductFormState extends State<ProductForm> {
                                       onPressed: () {
                                         product =
                                             Product.fromJson(formgroup.value);
+                                        product.brand = brand;
+                                        product.category = category;
+                                        product.image = webImage.toString();
                                         if (widget.id == null) {
                                           context
                                               .read<ProductBloc>()
@@ -442,7 +512,7 @@ class _ProductFormState extends State<ProductForm> {
                                   ),
                                 ),
                               ),
-                            ),
+                            )
                           ],
                         ),
                       ),
@@ -456,5 +526,19 @@ class _ProductFormState extends State<ProductForm> {
         ),
       ),
     );
+  }
+
+  Future picPicture() async {
+    if (kIsWeb) {
+      final ImagePicker picker = ImagePicker();
+      XFile? xImage = await picker.pickImage(source: ImageSource.gallery);
+      if (xImage != null) {
+        webImage = await xImage.readAsBytes();
+        image = File("a");
+        setState(() {});
+      }
+    } else {
+      print('err');
+    }
   }
 }

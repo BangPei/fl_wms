@@ -162,7 +162,7 @@ class _MainMenuState extends State<MainMenu> {
                   ),
                   const LeftListTile(
                     title: "Add Product",
-                    routeName: "product-form",
+                    routeName: "product/form",
                   ),
                   const LeftListTile(
                     title: "Brand",

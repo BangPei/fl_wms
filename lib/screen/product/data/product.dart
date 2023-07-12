@@ -1,5 +1,5 @@
 import 'package:fl_wms/screen/brand/data/brand.dart';
-import 'package:fl_wms/screen/category/data/category.dart';
+import 'package:fl_wms/screen/category/data/item_category.dart';
 import 'package:fl_wms/screen/uom/data/uom.dart';
 
 class Product {
@@ -9,7 +9,7 @@ class Product {
   String? image;
   int? reminderQty;
   Brand? brand;
-  Category? category;
+  ItemCategory? category;
   String? moving;
   bool? isActive;
   int? inExpiredDate;
@@ -42,8 +42,9 @@ class Product {
     image = json['image'];
     reminderQty = json['reminder_qty'];
     brand = json['brand'] != null ? Brand.fromJson(json['brand']) : null;
-    category =
-        json['category'] != null ? Category.fromJson(json['category']) : null;
+    category = json['category'] != null
+        ? ItemCategory.fromJson(json['category'])
+        : null;
     moving = json['moving'];
     isActive = json['is_active'];
     inExpiredDate = json['in_expired_date'];

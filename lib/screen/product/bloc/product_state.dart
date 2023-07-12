@@ -16,7 +16,7 @@ class ProductErrorState extends ProductState {
 class ProductFormState extends ProductState {
   final Product? product;
   final List<Brand>? brands;
-  final List<Category>? categories;
+  final List<ItemCategory>? categories;
   const ProductFormState({this.product, this.brands, this.categories});
   List<Object?> get props => [product, categories, brands];
 }

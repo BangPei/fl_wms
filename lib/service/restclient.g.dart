@@ -160,13 +160,13 @@ class _RestClient implements RestClient {
   }
 
   @override
-  Future<List<Category>> getCategories() async {
+  Future<List<ItemCategory>> getCategories() async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final Map<String, dynamic>? _data = null;
-    final _result =
-        await _dio.fetch<List<dynamic>>(_setStreamType<List<Category>>(Options(
+    final _result = await _dio
+        .fetch<List<dynamic>>(_setStreamType<List<ItemCategory>>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
@@ -183,19 +183,19 @@ class _RestClient implements RestClient {
               baseUrl,
             ))));
     var value = _result.data!
-        .map((dynamic i) => Category.fromJson(i as Map<String, dynamic>))
+        .map((dynamic i) => ItemCategory.fromJson(i as Map<String, dynamic>))
         .toList();
     return value;
   }
 
   @override
-  Future<Category> getCategory(int id) async {
+  Future<ItemCategory> getCategory(int id) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final Map<String, dynamic>? _data = null;
-    final _result =
-        await _dio.fetch<Map<String, dynamic>>(_setStreamType<Category>(Options(
+    final _result = await _dio
+        .fetch<Map<String, dynamic>>(_setStreamType<ItemCategory>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
@@ -211,12 +211,12 @@ class _RestClient implements RestClient {
               _dio.options.baseUrl,
               baseUrl,
             ))));
-    final value = Category.fromJson(_result.data!);
+    final value = ItemCategory.fromJson(_result.data!);
     return value;
   }
 
   @override
-  Future<dynamic> postCategory(Category category) async {
+  Future<dynamic> postCategory(ItemCategory category) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
@@ -245,7 +245,7 @@ class _RestClient implements RestClient {
   @override
   Future<dynamic> putCategory(
     int id,
-    Category category,
+    ItemCategory category,
   ) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};

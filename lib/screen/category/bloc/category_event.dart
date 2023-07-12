@@ -6,11 +6,11 @@ abstract class CategoryEvent {
 }
 
 class PostCategory extends CategoryEvent {
-  final Category category;
+  final ItemCategory category;
   const PostCategory(this.category);
 }
 
 class PutCategory extends CategoryEvent {
-  final Category category;
+  final ItemCategory category;
   const PutCategory(this.category);
 }

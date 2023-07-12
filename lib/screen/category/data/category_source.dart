@@ -12,11 +12,11 @@ import 'package:flutter_bootstrap_widgets/bootstrap_widgets.dart';
 import 'package:badges/badges.dart' as badges;
 import 'package:reactive_forms/reactive_forms.dart';
 
-import 'category.dart';
+import 'item_category.dart';
 
 // typedef OnViewRowSelect = void Function(Brand brand);
 
-class CategorySource extends AdvancedDataTableSource<Category> {
+class CategorySource extends AdvancedDataTableSource<ItemCategory> {
   final NavigationService _nav = locator<NavigationService>();
   String searchText = "";
   int _draw = 0;
@@ -36,7 +36,7 @@ class CategorySource extends AdvancedDataTableSource<Category> {
     if (index >= lastDetails!.rows.length) {
       return null;
     }
-    Category e = lastDetails!.rows[index];
+    ItemCategory e = lastDetails!.rows[index];
     if (lastDetails!.rows.isEmpty) {
       return DataRow.byIndex(
         index: index,
@@ -145,7 +145,7 @@ class CategorySource extends AdvancedDataTableSource<Category> {
   int get selectedRowCount => 0;
 
   @override
-  Future<RemoteDataSourceDetails<Category>> getNextPage(
+  Future<RemoteDataSourceDetails<ItemCategory>> getNextPage(
       NextPageRequest pageRequest) async {
     try {
       _controller.addListener(() {
@@ -162,8 +162,8 @@ class CategorySource extends AdvancedDataTableSource<Category> {
         orderdir: (pageRequest.sortAscending ?? false) ? "asc" : "desc",
         searchText: searchText,
       );
-      List<Category> brands =
-          (dataTable.data ?? []).map((e) => Category.fromJson(e)).toList();
+      List<ItemCategory> brands =
+          (dataTable.data ?? []).map((e) => ItemCategory.fromJson(e)).toList();
       return RemoteDataSourceDetails(
         dataTable.recordsTotal ?? 0,
         brands,
@@ -179,7 +179,7 @@ class CategorySource extends AdvancedDataTableSource<Category> {
     setNextView();
   }
 
-  openModal({Category? category}) async {
+  openModal({ItemCategory? category}) async {
     if (category != null) {
       formgroup.control("name").value = category.name;
       _controller.value = category.isActive!;
@@ -190,7 +190,7 @@ class CategorySource extends AdvancedDataTableSource<Category> {
       BootstrapModalSize.medium,
       title: "Add Category",
       onSave: () {
-        Category newData = Category.fromJson(formgroup.value);
+        ItemCategory newData = ItemCategory.fromJson(formgroup.value);
         if (category != null) {
           newData.id = category.id;
           _nav.navKey.currentContext!
@@ -215,7 +215,8 @@ class CategorySource extends AdvancedDataTableSource<Category> {
                 ReactiveTextField(
                   formControlName: 'name',
                   onSubmitted: (val) {
-                    Category newData = Category.fromJson(formgroup.value);
+                    ItemCategory newData =
+                        ItemCategory.fromJson(formgroup.value);
                     if (category != null) {
                       newData.id = category.id;
                       _nav.navKey.currentContext!

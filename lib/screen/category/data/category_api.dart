@@ -1,26 +1,26 @@
-import 'package:fl_wms/screen/category/data/category.dart';
+import 'package:fl_wms/screen/category/data/item_category.dart';
 import 'package:fl_wms/service/api.dart';
 
 class CategoryApi {
-  static Future<List<Category>> getCategories() async {
+  static Future<List<ItemCategory>> getCategories() async {
     final client = await Api.restClient();
     var data = client.getCategories();
     return data;
   }
 
-  static Future<Category> getCategory(int id) async {
+  static Future<ItemCategory> getCategory(int id) async {
     final client = await Api.restClient();
     var data = client.getCategory(id);
     return data;
   }
 
-  static Future postCategory(Category category) async {
+  static Future postCategory(ItemCategory category) async {
     final client = await Api.restClient();
     var data = client.postCategory(category);
     return data;
   }
 
-  static Future putCategory(int id, Category category) async {
+  static Future putCategory(int id, ItemCategory category) async {
     final client = await Api.restClient();
     var data = client.putCategory(id, category);
     return data;
