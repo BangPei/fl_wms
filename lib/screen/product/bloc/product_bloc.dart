@@ -1,6 +1,10 @@
 import 'dart:convert';
 
 import 'package:fl_wms/models/datatable_model.dart';
+import 'package:fl_wms/screen/brand/data/brand.dart';
+import 'package:fl_wms/screen/brand/data/brand_api.dart';
+import 'package:fl_wms/screen/category/data/category.dart';
+import 'package:fl_wms/screen/category/data/category_api.dart';
 import 'package:fl_wms/screen/product/data/product.dart';
 import 'package:fl_wms/screen/product/data/product_api.dart';
 import 'package:fl_wms/service/api.dart';
@@ -89,12 +93,14 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       ProductStandbyForm event, Emitter<ProductState> emit) async {
     emit(ProductLoadingState());
     try {
-      if (event.id == null) {
-        emit(const ProductFormState());
-      } else {
-        Product product = await ProductApi.getProduct(event.id!);
-        emit(ProductFormState(product: product));
+      List<Category> categories = await CategoryApi.getCategories();
+      List<Brand> brands = await BrandApi.getBrands();
+      Product product = Product();
+      if (event.id != null) {
+        product = await ProductApi.getProduct(event.id!);
       }
+      emit(ProductFormState(
+          product: product, categories: categories, brands: brands));
     } catch (e) {
       emit(ProductErrorState());
     }

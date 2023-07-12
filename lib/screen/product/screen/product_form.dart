@@ -1,4 +1,4 @@
-import 'package:fl_wms/screen/category/data/category.dart';
+import 'package:fl_wms/screen/brand/data/brand.dart';
 import 'package:fl_wms/screen/product/bloc/product_bloc.dart';
 import 'package:fl_wms/screen/product/data/product.dart';
 import 'package:fl_wms/widget/card_template.dart';
@@ -12,8 +12,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:reactive_dropdown_search/reactive_dropdown_search.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:responsive_grid/responsive_grid.dart';
-
-import '../../brand/data/brand.dart';
 
 class ProductForm extends StatefulWidget {
   final int? id;
@@ -48,12 +46,8 @@ class _ProductFormState extends State<ProductForm> {
     'moving': FormControl<String>(
       value: 'FAST',
     ),
-    'brand': FormControl<Brand>(
-      value: Brand(),
-    ),
-    'category': FormControl<Category>(
-      value: Category(),
-    ),
+    'brand': FormControl<Brand>(),
+    'category': FormControl<String>(),
     'reminder_qty': FormControl<int>(
       // value: 0,
       validators: [Validators.required],
@@ -150,44 +144,100 @@ class _ProductFormState extends State<ProductForm> {
                                 ),
                               ),
                             ),
-                            // ResponsiveGridCol(
-                            //   lg: 3,
-                            //   xl: 3,
-                            //   md: 3,
-                            //   sm: 12,
-                            //   child: Padding(
-                            //     padding: const EdgeInsets.symmetric(
-                            //         horizontal: 16.0, vertical: 2),
-                            //     child: BootstrapFormGroup(
-                            //       children: [
-                            //         const BootstrapLabelText(
-                            //           child: SelectableText('Reminder Qty'),
-                            //         ),
-                            //         ReactiveDropdownSearch<String, Brand>(
-                            //           formControlName: 'brand',
-                            //           dropdownDecoratorProps:
-                            //               const DropDownDecoratorProps(
-                            //             dropdownSearchDecoration:
-                            //                 InputDecoration(
-                            //               hintText: "Select a Brand",
-                            //               helperText: '',
-                            //               labelText: "Menu brand *",
-                            //               contentPadding:
-                            //                   EdgeInsets.fromLTRB(12, 12, 0, 0),
-                            //               border: OutlineInputBorder(),
-                            //             ),
-                            //           ),
-                            //           popupProps: const PopupProps.menu(
-                            //             showSelectedItems: true,
-                            //             // disabledItemFn: (s) {},
-                            //           ),
-                            //           items: const [],
-                            //           showClearButton: true,
-                            //         ),
-                            //       ],
-                            //     ),
-                            //   ),
-                            // ),
+                            ResponsiveGridCol(
+                              lg: 3,
+                              xl: 3,
+                              md: 3,
+                              sm: 12,
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 16.0, vertical: 2),
+                                child: BootstrapFormGroup(
+                                  children: [
+                                    const BootstrapLabelText(
+                                      child: SelectableText('Brand'),
+                                    ),
+                                    ReactiveDropdownSearch<Brand, Brand>(
+                                      formControlName: 'brand',
+                                      dropdownDecoratorProps:
+                                          const DropDownDecoratorProps(
+                                        dropdownSearchDecoration:
+                                            InputDecoration(
+                                          hintText: "Select a Brand",
+                                          helperText: '',
+                                          contentPadding:
+                                              EdgeInsets.fromLTRB(12, 12, 0, 0),
+                                          border: OutlineInputBorder(),
+                                        ),
+                                      ),
+                                      popupProps: PopupProps.menu(
+                                        title: const Text("List Brand"),
+                                        // showSelectedItems: true,
+                                        showSearchBox: true,
+                                        itemBuilder:
+                                            (context, item, isSelected) {
+                                          return ListTile(
+                                            title: Text(item.name ?? ""),
+                                          );
+                                        },
+                                      ),
+                                      showClearButton: true,
+                                      dropdownBuilder: (c, s) {
+                                        return Text(s?.name ?? "");
+                                      },
+                                      onBeforeChange: (b, c) async {
+                                        print(b);
+                                        print(c);
+                                        return true;
+                                      },
+                                      items: (state.brands ?? [])
+                                      // .map((e) => e.name ?? "")
+                                      // .toList(),
+                                      ,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            ResponsiveGridCol(
+                              lg: 3,
+                              xl: 3,
+                              md: 3,
+                              sm: 12,
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 16.0, vertical: 2),
+                                child: BootstrapFormGroup(
+                                  children: [
+                                    const BootstrapLabelText(
+                                      child: SelectableText('Category'),
+                                    ),
+                                    ReactiveDropdownSearch<String, String>(
+                                      formControlName: 'category',
+                                      dropdownDecoratorProps:
+                                          const DropDownDecoratorProps(
+                                        dropdownSearchDecoration:
+                                            InputDecoration(
+                                          hintText: "Select a Category",
+                                          helperText: '',
+                                          contentPadding:
+                                              EdgeInsets.fromLTRB(12, 12, 0, 0),
+                                          border: OutlineInputBorder(),
+                                        ),
+                                      ),
+                                      popupProps: const PopupProps.menu(
+                                        showSelectedItems: true,
+                                        // disabledItemFn: (s) =>s,
+                                      ),
+                                      items: (state.categories ?? [])
+                                          .map((e) => e.name ?? "")
+                                          .toList(),
+                                      showClearButton: true,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
                             ResponsiveGridCol(
                               lg: 3,
                               xl: 3,
