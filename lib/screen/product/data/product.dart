@@ -66,6 +66,8 @@ class Product {
     data['name'] = name;
     data['image'] = image;
     data['reminder_qty'] = reminderQty;
+    data['brand_id'] = brand!.id;
+    data['category_id'] = category!.id;
     if (brand != null) {
       data['brand'] = brand!.toJson();
     }
@@ -73,7 +75,7 @@ class Product {
       data['category'] = category!.toJson();
     }
     data['moving'] = moving;
-    data['is_active'] = isActive;
+    data['is_active'] = (isActive ?? false) ? 1 : 0;
     data['in_expired_date'] = inExpiredDate;
     data['out_expired_date'] = outExpiredDate;
     data['created_at'] = createdAt;

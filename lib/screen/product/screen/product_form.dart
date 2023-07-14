@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:dotted_border/dotted_border.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:fl_wms/screen/brand/data/brand.dart';
@@ -483,7 +482,7 @@ class _ProductFormState extends State<ProductForm> {
                                             Product.fromJson(formgroup.value);
                                         product.brand = brand;
                                         product.category = category;
-                                        product.image = webImage.toString();
+                                        // product.image = base64Encode(webImage);
                                         if (widget.id == null) {
                                           context
                                               .read<ProductBloc>()

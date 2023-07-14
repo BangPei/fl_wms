@@ -82,8 +82,9 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
   void _postProduct(PostProduct event, Emitter<ProductState> emit) async {
     emit(ProductLoadingState());
     try {
-      await ProductApi.postProduct(event.product);
+      var data = await ProductApi.postProduct(event.product);
       // emit(const ProductDataState());
+      print(data);
     } catch (e) {
       emit(ProductErrorState());
     }
