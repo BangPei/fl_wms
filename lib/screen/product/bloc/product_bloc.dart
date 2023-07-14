@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:fl_wms/library/interceptor/injector.dart';
+import 'package:fl_wms/library/interceptor/navigation_service.dart';
 import 'package:fl_wms/models/datatable_model.dart';
 import 'package:fl_wms/screen/brand/data/brand.dart';
 import 'package:fl_wms/screen/brand/data/brand_api.dart';
@@ -10,6 +12,7 @@ import 'package:fl_wms/screen/product/data/product_api.dart';
 import 'package:fl_wms/service/api.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:http/http.dart' as http;
 
 part 'product_event.dart';
@@ -18,6 +21,7 @@ part 'product_state.dart';
 Map<String, dynamic> query = {};
 int _draw = 0;
 List<String> columns = ['code', 'name', 'brand', 'category', 'updated_at'];
+final NavigationService _nav = locator<NavigationService>();
 
 class ProductBloc extends Bloc<ProductEvent, ProductState> {
   ProductBloc() : super(ProductLoadingState()) {
@@ -82,9 +86,9 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
   void _postProduct(PostProduct event, Emitter<ProductState> emit) async {
     emit(ProductLoadingState());
     try {
-      var data = await ProductApi.postProduct(event.product);
-      // emit(const ProductDataState());
-      print(data);
+      await ProductApi.postProduct(event.product);
+      // ignore: use_build_context_synchronously
+      _nav.navKey.currentContext!.goNamed("product");
     } catch (e) {
       emit(ProductErrorState());
     }

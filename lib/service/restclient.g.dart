@@ -23,7 +23,7 @@ class _RestClient implements RestClient {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    const Map<String, dynamic>? _data = null;
+    final _data = <String, dynamic>{};
     final _result =
         await _dio.fetch<List<dynamic>>(_setStreamType<List<Brand>>(Options(
       method: 'GET',
@@ -36,11 +36,7 @@ class _RestClient implements RestClient {
               queryParameters: queryParameters,
               data: _data,
             )
-            .copyWith(
-                baseUrl: _combineBaseUrls(
-              _dio.options.baseUrl,
-              baseUrl,
-            ))));
+            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
     var value = _result.data!
         .map((dynamic i) => Brand.fromJson(i as Map<String, dynamic>))
         .toList();
@@ -48,11 +44,11 @@ class _RestClient implements RestClient {
   }
 
   @override
-  Future<Brand> getBrand(int id) async {
+  Future<Brand> getBrand(id) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    const Map<String, dynamic>? _data = null;
+    final _data = <String, dynamic>{};
     final _result =
         await _dio.fetch<Map<String, dynamic>>(_setStreamType<Brand>(Options(
       method: 'GET',
@@ -65,17 +61,13 @@ class _RestClient implements RestClient {
               queryParameters: queryParameters,
               data: _data,
             )
-            .copyWith(
-                baseUrl: _combineBaseUrls(
-              _dio.options.baseUrl,
-              baseUrl,
-            ))));
+            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
     final value = Brand.fromJson(_result.data!);
     return value;
   }
 
   @override
-  Future<dynamic> postBrand(Brand brand) async {
+  Future<dynamic> postBrand(brand) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
@@ -92,19 +84,15 @@ class _RestClient implements RestClient {
           queryParameters: queryParameters,
           data: _data,
         )
-        .copyWith(
-            baseUrl: _combineBaseUrls(
-          _dio.options.baseUrl,
-          baseUrl,
-        ))));
+        .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
     final value = _result.data;
     return value;
   }
 
   @override
   Future<dynamic> putBrand(
-    int id,
-    Brand brand,
+    id,
+    brand,
   ) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
@@ -122,21 +110,17 @@ class _RestClient implements RestClient {
           queryParameters: queryParameters,
           data: _data,
         )
-        .copyWith(
-            baseUrl: _combineBaseUrls(
-          _dio.options.baseUrl,
-          baseUrl,
-        ))));
+        .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
     final value = _result.data;
     return value;
   }
 
   @override
-  Future<dynamic> deleteBrand(int id) async {
+  Future<dynamic> deleteBrand(id) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    const Map<String, dynamic>? _data = null;
+    final _data = <String, dynamic>{};
     final _result = await _dio.fetch(_setStreamType<dynamic>(Options(
       method: 'DELETE',
       headers: _headers,
@@ -148,11 +132,7 @@ class _RestClient implements RestClient {
           queryParameters: queryParameters,
           data: _data,
         )
-        .copyWith(
-            baseUrl: _combineBaseUrls(
-          _dio.options.baseUrl,
-          baseUrl,
-        ))));
+        .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
     final value = _result.data;
     return value;
   }
@@ -162,7 +142,7 @@ class _RestClient implements RestClient {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    const Map<String, dynamic>? _data = null;
+    final _data = <String, dynamic>{};
     final _result = await _dio
         .fetch<List<dynamic>>(_setStreamType<List<ItemCategory>>(Options(
       method: 'GET',
@@ -175,11 +155,7 @@ class _RestClient implements RestClient {
               queryParameters: queryParameters,
               data: _data,
             )
-            .copyWith(
-                baseUrl: _combineBaseUrls(
-              _dio.options.baseUrl,
-              baseUrl,
-            ))));
+            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
     var value = _result.data!
         .map((dynamic i) => ItemCategory.fromJson(i as Map<String, dynamic>))
         .toList();
@@ -187,11 +163,11 @@ class _RestClient implements RestClient {
   }
 
   @override
-  Future<ItemCategory> getCategory(int id) async {
+  Future<ItemCategory> getCategory(id) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    const Map<String, dynamic>? _data = null;
+    final _data = <String, dynamic>{};
     final _result = await _dio
         .fetch<Map<String, dynamic>>(_setStreamType<ItemCategory>(Options(
       method: 'GET',
@@ -204,17 +180,13 @@ class _RestClient implements RestClient {
               queryParameters: queryParameters,
               data: _data,
             )
-            .copyWith(
-                baseUrl: _combineBaseUrls(
-              _dio.options.baseUrl,
-              baseUrl,
-            ))));
+            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
     final value = ItemCategory.fromJson(_result.data!);
     return value;
   }
 
   @override
-  Future<dynamic> postCategory(ItemCategory category) async {
+  Future<dynamic> postCategory(category) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
@@ -231,19 +203,15 @@ class _RestClient implements RestClient {
           queryParameters: queryParameters,
           data: _data,
         )
-        .copyWith(
-            baseUrl: _combineBaseUrls(
-          _dio.options.baseUrl,
-          baseUrl,
-        ))));
+        .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
     final value = _result.data;
     return value;
   }
 
   @override
   Future<dynamic> putCategory(
-    int id,
-    ItemCategory category,
+    id,
+    category,
   ) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
@@ -261,21 +229,17 @@ class _RestClient implements RestClient {
           queryParameters: queryParameters,
           data: _data,
         )
-        .copyWith(
-            baseUrl: _combineBaseUrls(
-          _dio.options.baseUrl,
-          baseUrl,
-        ))));
+        .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
     final value = _result.data;
     return value;
   }
 
   @override
-  Future<dynamic> deleteCategory(int id) async {
+  Future<dynamic> deleteCategory(id) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    const Map<String, dynamic>? _data = null;
+    final _data = <String, dynamic>{};
     final _result = await _dio.fetch(_setStreamType<dynamic>(Options(
       method: 'DELETE',
       headers: _headers,
@@ -287,11 +251,7 @@ class _RestClient implements RestClient {
           queryParameters: queryParameters,
           data: _data,
         )
-        .copyWith(
-            baseUrl: _combineBaseUrls(
-          _dio.options.baseUrl,
-          baseUrl,
-        ))));
+        .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
     final value = _result.data;
     return value;
   }
@@ -301,7 +261,7 @@ class _RestClient implements RestClient {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    const Map<String, dynamic>? _data = null;
+    final _data = <String, dynamic>{};
     final _result =
         await _dio.fetch<List<dynamic>>(_setStreamType<List<Uom>>(Options(
       method: 'GET',
@@ -314,11 +274,7 @@ class _RestClient implements RestClient {
               queryParameters: queryParameters,
               data: _data,
             )
-            .copyWith(
-                baseUrl: _combineBaseUrls(
-              _dio.options.baseUrl,
-              baseUrl,
-            ))));
+            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
     var value = _result.data!
         .map((dynamic i) => Uom.fromJson(i as Map<String, dynamic>))
         .toList();
@@ -326,11 +282,11 @@ class _RestClient implements RestClient {
   }
 
   @override
-  Future<Uom> getUom(int id) async {
+  Future<Uom> getUom(id) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    const Map<String, dynamic>? _data = null;
+    final _data = <String, dynamic>{};
     final _result =
         await _dio.fetch<Map<String, dynamic>>(_setStreamType<Uom>(Options(
       method: 'GET',
@@ -343,17 +299,13 @@ class _RestClient implements RestClient {
               queryParameters: queryParameters,
               data: _data,
             )
-            .copyWith(
-                baseUrl: _combineBaseUrls(
-              _dio.options.baseUrl,
-              baseUrl,
-            ))));
+            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
     final value = Uom.fromJson(_result.data!);
     return value;
   }
 
   @override
-  Future<dynamic> postUom(Uom uom) async {
+  Future<dynamic> postUom(uom) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
@@ -370,19 +322,15 @@ class _RestClient implements RestClient {
           queryParameters: queryParameters,
           data: _data,
         )
-        .copyWith(
-            baseUrl: _combineBaseUrls(
-          _dio.options.baseUrl,
-          baseUrl,
-        ))));
+        .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
     final value = _result.data;
     return value;
   }
 
   @override
   Future<dynamic> putUom(
-    int id,
-    Uom uom,
+    id,
+    uom,
   ) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
@@ -400,21 +348,17 @@ class _RestClient implements RestClient {
           queryParameters: queryParameters,
           data: _data,
         )
-        .copyWith(
-            baseUrl: _combineBaseUrls(
-          _dio.options.baseUrl,
-          baseUrl,
-        ))));
+        .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
     final value = _result.data;
     return value;
   }
 
   @override
-  Future<dynamic> deleteUom(int id) async {
+  Future<dynamic> deleteUom(id) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    const Map<String, dynamic>? _data = null;
+    final _data = <String, dynamic>{};
     final _result = await _dio.fetch(_setStreamType<dynamic>(Options(
       method: 'DELETE',
       headers: _headers,
@@ -426,11 +370,7 @@ class _RestClient implements RestClient {
           queryParameters: queryParameters,
           data: _data,
         )
-        .copyWith(
-            baseUrl: _combineBaseUrls(
-          _dio.options.baseUrl,
-          baseUrl,
-        ))));
+        .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
     final value = _result.data;
     return value;
   }
@@ -440,7 +380,7 @@ class _RestClient implements RestClient {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    const Map<String, dynamic>? _data = null;
+    final _data = <String, dynamic>{};
     final _result =
         await _dio.fetch<List<dynamic>>(_setStreamType<List<Warehouse>>(Options(
       method: 'GET',
@@ -453,11 +393,7 @@ class _RestClient implements RestClient {
               queryParameters: queryParameters,
               data: _data,
             )
-            .copyWith(
-                baseUrl: _combineBaseUrls(
-              _dio.options.baseUrl,
-              baseUrl,
-            ))));
+            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
     var value = _result.data!
         .map((dynamic i) => Warehouse.fromJson(i as Map<String, dynamic>))
         .toList();
@@ -465,11 +401,11 @@ class _RestClient implements RestClient {
   }
 
   @override
-  Future<Warehouse> getWarehouseByCode(String code) async {
+  Future<Warehouse> getWarehouseByCode(code) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    const Map<String, dynamic>? _data = null;
+    final _data = <String, dynamic>{};
     final _result = await _dio
         .fetch<Map<String, dynamic>>(_setStreamType<Warehouse>(Options(
       method: 'GET',
@@ -482,21 +418,17 @@ class _RestClient implements RestClient {
               queryParameters: queryParameters,
               data: _data,
             )
-            .copyWith(
-                baseUrl: _combineBaseUrls(
-              _dio.options.baseUrl,
-              baseUrl,
-            ))));
+            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
     final value = Warehouse.fromJson(_result.data!);
     return value;
   }
 
   @override
-  Future<Warehouse> getWarehouse(int id) async {
+  Future<Warehouse> getWarehouse(id) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    const Map<String, dynamic>? _data = null;
+    final _data = <String, dynamic>{};
     final _result = await _dio
         .fetch<Map<String, dynamic>>(_setStreamType<Warehouse>(Options(
       method: 'GET',
@@ -509,17 +441,13 @@ class _RestClient implements RestClient {
               queryParameters: queryParameters,
               data: _data,
             )
-            .copyWith(
-                baseUrl: _combineBaseUrls(
-              _dio.options.baseUrl,
-              baseUrl,
-            ))));
+            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
     final value = Warehouse.fromJson(_result.data!);
     return value;
   }
 
   @override
-  Future<dynamic> postWarehouse(Warehouse wa) async {
+  Future<dynamic> postWarehouse(wa) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
@@ -536,19 +464,15 @@ class _RestClient implements RestClient {
           queryParameters: queryParameters,
           data: _data,
         )
-        .copyWith(
-            baseUrl: _combineBaseUrls(
-          _dio.options.baseUrl,
-          baseUrl,
-        ))));
+        .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
     final value = _result.data;
     return value;
   }
 
   @override
   Future<dynamic> putWarehouse(
-    int id,
-    Warehouse wa,
+    id,
+    wa,
   ) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
@@ -566,21 +490,17 @@ class _RestClient implements RestClient {
           queryParameters: queryParameters,
           data: _data,
         )
-        .copyWith(
-            baseUrl: _combineBaseUrls(
-          _dio.options.baseUrl,
-          baseUrl,
-        ))));
+        .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
     final value = _result.data;
     return value;
   }
 
   @override
-  Future<dynamic> deleteWarehouse(int id) async {
+  Future<dynamic> deleteWarehouse(id) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    const Map<String, dynamic>? _data = null;
+    final _data = <String, dynamic>{};
     final _result = await _dio.fetch(_setStreamType<dynamic>(Options(
       method: 'DELETE',
       headers: _headers,
@@ -592,11 +512,7 @@ class _RestClient implements RestClient {
           queryParameters: queryParameters,
           data: _data,
         )
-        .copyWith(
-            baseUrl: _combineBaseUrls(
-          _dio.options.baseUrl,
-          baseUrl,
-        ))));
+        .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
     final value = _result.data;
     return value;
   }
@@ -606,7 +522,7 @@ class _RestClient implements RestClient {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    const Map<String, dynamic>? _data = null;
+    final _data = <String, dynamic>{};
     final _result =
         await _dio.fetch<List<dynamic>>(_setStreamType<List<Product>>(Options(
       method: 'GET',
@@ -619,11 +535,7 @@ class _RestClient implements RestClient {
               queryParameters: queryParameters,
               data: _data,
             )
-            .copyWith(
-                baseUrl: _combineBaseUrls(
-              _dio.options.baseUrl,
-              baseUrl,
-            ))));
+            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
     var value = _result.data!
         .map((dynamic i) => Product.fromJson(i as Map<String, dynamic>))
         .toList();
@@ -631,11 +543,11 @@ class _RestClient implements RestClient {
   }
 
   @override
-  Future<Product> getProductBySku(String sku) async {
+  Future<Product> getProductBySku(sku) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    const Map<String, dynamic>? _data = null;
+    final _data = <String, dynamic>{};
     final _result =
         await _dio.fetch<Map<String, dynamic>>(_setStreamType<Product>(Options(
       method: 'GET',
@@ -648,21 +560,17 @@ class _RestClient implements RestClient {
               queryParameters: queryParameters,
               data: _data,
             )
-            .copyWith(
-                baseUrl: _combineBaseUrls(
-              _dio.options.baseUrl,
-              baseUrl,
-            ))));
+            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
     final value = Product.fromJson(_result.data!);
     return value;
   }
 
   @override
-  Future<Product> getProduct(int id) async {
+  Future<Product> getProduct(id) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    const Map<String, dynamic>? _data = null;
+    final _data = <String, dynamic>{};
     final _result =
         await _dio.fetch<Map<String, dynamic>>(_setStreamType<Product>(Options(
       method: 'GET',
@@ -675,17 +583,13 @@ class _RestClient implements RestClient {
               queryParameters: queryParameters,
               data: _data,
             )
-            .copyWith(
-                baseUrl: _combineBaseUrls(
-              _dio.options.baseUrl,
-              baseUrl,
-            ))));
+            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
     final value = Product.fromJson(_result.data!);
     return value;
   }
 
   @override
-  Future<dynamic> postProduct(Product product) async {
+  Future<dynamic> postProduct(product) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
@@ -702,19 +606,15 @@ class _RestClient implements RestClient {
           queryParameters: queryParameters,
           data: _data,
         )
-        .copyWith(
-            baseUrl: _combineBaseUrls(
-          _dio.options.baseUrl,
-          baseUrl,
-        ))));
+        .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
     final value = _result.data;
     return value;
   }
 
   @override
   Future<dynamic> putProduct(
-    int id,
-    Product product,
+    id,
+    product,
   ) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
@@ -732,21 +632,17 @@ class _RestClient implements RestClient {
           queryParameters: queryParameters,
           data: _data,
         )
-        .copyWith(
-            baseUrl: _combineBaseUrls(
-          _dio.options.baseUrl,
-          baseUrl,
-        ))));
+        .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
     final value = _result.data;
     return value;
   }
 
   @override
-  Future<dynamic> deleteProduct(int id) async {
+  Future<dynamic> deleteProduct(id) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    const Map<String, dynamic>? _data = null;
+    final _data = <String, dynamic>{};
     final _result = await _dio.fetch(_setStreamType<dynamic>(Options(
       method: 'DELETE',
       headers: _headers,
@@ -758,11 +654,7 @@ class _RestClient implements RestClient {
           queryParameters: queryParameters,
           data: _data,
         )
-        .copyWith(
-            baseUrl: _combineBaseUrls(
-          _dio.options.baseUrl,
-          baseUrl,
-        ))));
+        .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
     final value = _result.data;
     return value;
   }
@@ -778,22 +670,5 @@ class _RestClient implements RestClient {
       }
     }
     return requestOptions;
-  }
-
-  String _combineBaseUrls(
-    String dioBaseUrl,
-    String? baseUrl,
-  ) {
-    if (baseUrl == null || baseUrl.trim().isEmpty) {
-      return dioBaseUrl;
-    }
-
-    final url = Uri.parse(baseUrl);
-
-    if (url.isAbsolute) {
-      return url.toString();
-    }
-
-    return Uri.parse(dioBaseUrl).resolveUri(url).toString();
   }
 }

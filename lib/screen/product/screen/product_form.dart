@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:dropdown_search/dropdown_search.dart';
@@ -34,6 +35,7 @@ class _ProductFormState extends State<ProductForm> {
   Brand brand = Brand();
   Product product = Product();
   File? image;
+
   Uint8List webImage = Uint8List(8);
   final _controller = ValueNotifier<bool>(true);
   final formgroup = FormGroup({
@@ -278,32 +280,42 @@ class _ProductFormState extends State<ProductForm> {
                                                     webImage,
                                                     fit: BoxFit.fill,
                                                   )
-                                                : Container(
-                                                    height: 150,
-                                                    color: const Color.fromARGB(
-                                                        255, 253, 253, 249),
-                                                    child: const Center(
-                                                      child: Column(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .center,
-                                                        children: [
-                                                          Icon(
-                                                            Icons
-                                                                .picture_in_picture_sharp,
-                                                            color:
-                                                                Colors.indigo,
-                                                          ),
-                                                          SizedBox(height: 10),
-                                                          Text("Select Picture",
-                                                              style: TextStyle(
+                                                : state.product!.image != null
+                                                    ? Image.memory(
+                                                        base64Decode(state
+                                                            .product!.image!),
+                                                        fit: BoxFit.fill,
+                                                      )
+                                                    : Container(
+                                                        height: 150,
+                                                        color: const Color
+                                                                .fromARGB(
+                                                            255, 253, 253, 249),
+                                                        child: const Center(
+                                                          child: Column(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .center,
+                                                            children: [
+                                                              Icon(
+                                                                Icons
+                                                                    .picture_in_picture_sharp,
                                                                 color: Colors
                                                                     .indigo,
-                                                              )),
-                                                        ],
+                                                              ),
+                                                              SizedBox(
+                                                                  height: 10),
+                                                              Text(
+                                                                  "Select Picture",
+                                                                  style:
+                                                                      TextStyle(
+                                                                    color: Colors
+                                                                        .indigo,
+                                                                  )),
+                                                            ],
+                                                          ),
+                                                        ),
                                                       ),
-                                                    ),
-                                                  ),
                                           ),
                                         ),
                                       ),
@@ -482,7 +494,8 @@ class _ProductFormState extends State<ProductForm> {
                                             Product.fromJson(formgroup.value);
                                         product.brand = brand;
                                         product.category = category;
-                                        // product.image = base64Encode(webImage);
+                                        // postImage();
+                                        product.image = base64Encode(webImage);
                                         if (widget.id == null) {
                                           context
                                               .read<ProductBloc>()
@@ -531,6 +544,7 @@ class _ProductFormState extends State<ProductForm> {
     if (kIsWeb) {
       final ImagePicker picker = ImagePicker();
       XFile? xImage = await picker.pickImage(source: ImageSource.gallery);
+      setState(() {});
       if (xImage != null) {
         webImage = await xImage.readAsBytes();
         image = File("a");
@@ -540,4 +554,15 @@ class _ProductFormState extends State<ProductForm> {
       print('err');
     }
   }
+
+  // Future postImage() async {
+  //   Uri uri = Uri.parse("${Api.baseUrl()}product");
+  //   var request = http.MultipartRequest("POST", uri);
+  //   List<int> list = webImage.cast();
+  //   request.fields.addAll(product.toJsonString());
+  //   request.files.add(http.MultipartFile.fromBytes('image', list));
+  //   var response = await request.send();
+
+  //   print(response.statusCode);
+  // }
 }

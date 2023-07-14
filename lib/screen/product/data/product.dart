@@ -85,6 +85,25 @@ class Product {
     }
     return data;
   }
+
+  Map<String, String> toJsonString() {
+    final Map<String, String> data = <String, String>{};
+    data['id'] = id.toString();
+    data['code'] = code ?? "";
+    data['name'] = name ?? "";
+    data['image'] = image ?? "";
+    data['reminder_qty'] = reminderQty.toString();
+    data['brand_id'] = brand!.id.toString();
+    data['category_id'] = category!.id.toString();
+    data['moving'] = moving ?? "FAST";
+    data['is_active'] = (isActive ?? false) ? "1" : "0";
+    data['in_expired_date'] = inExpiredDate.toString();
+    data['out_expired_date'] = outExpiredDate.toString();
+    // if (items != null) {
+    //   data['items'] = items!.map((v) => v.toJson()).toList();
+    // }
+    return data;
+  }
 }
 
 class ItemConvertion {

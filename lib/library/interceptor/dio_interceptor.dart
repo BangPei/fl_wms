@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:dio/dio.dart';
 
 class DioInterceptors extends Interceptor {
@@ -19,7 +21,7 @@ class DioInterceptors extends Interceptor {
   }
 
   @override
-  Future onError(DioException err, ErrorInterceptorHandler handler) async {
+  Future onError(err, ErrorInterceptorHandler handler) async {
     print(
         'ERROR[${err.response?.statusCode}] => PATH: ${err.requestOptions.path}');
     super.onError(err, handler);
