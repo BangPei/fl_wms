@@ -35,6 +35,11 @@ class GetProductById extends ProductEvent {
   const GetProductById(this.id);
 }
 
+class OnTapPicture extends ProductEvent {
+  final Uint8List image;
+  const OnTapPicture(this.image);
+}
+
 class ProductStandbyForm extends ProductEvent {
   final int? id;
   const ProductStandbyForm({this.id});

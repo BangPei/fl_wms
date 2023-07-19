@@ -18,6 +18,14 @@ class ProductFormState extends ProductState {
   final List<Brand>? brands;
   final List<ItemCategory>? categories;
   const ProductFormState({this.product, this.brands, this.categories});
+  ProductFormState copyWith({product, brands, categories}) {
+    return ProductFormState(
+      brands: brands ?? this.brands,
+      product: product ?? this.product,
+      categories: categories ?? this.categories,
+    );
+  }
+
   List<Object?> get props => [product, categories, brands];
 }
 

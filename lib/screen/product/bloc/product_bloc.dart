@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:fl_wms/library/interceptor/injector.dart';
 import 'package:fl_wms/library/interceptor/navigation_service.dart';
@@ -30,6 +31,12 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
     on<PutProduct>(_putProduct);
     on<ProductStandbyForm>(_productStandByForm);
     on<SearchProduct>(_searchProduct);
+    on<ProductEvent>((event, emit) async {
+      if (event is OnTapPicture) {
+        ProductState productState = await _onTapPicture(event, emit);
+        emit(productState);
+      }
+    });
   }
 
   void _getDataTable(GetDataTable event, Emitter<ProductState> emit) async {
@@ -89,6 +96,20 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       await ProductApi.postProduct(event.product);
       // ignore: use_build_context_synchronously
       _nav.navKey.currentContext!.goNamed("product");
+    } catch (e) {
+      emit(ProductErrorState());
+    }
+  }
+
+  Future _onTapPicture(OnTapPicture event, Emitter<ProductState> emit) async {
+    try {
+      final state =
+          BlocProvider.of<ProductBloc>(_nav.navKey.currentContext!).state;
+      if (state is ProductFormState) {
+        Product product = state.product ?? Product();
+        product.image = base64Encode(event.image);
+        return state.copyWith(product: product);
+      }
     } catch (e) {
       emit(ProductErrorState());
     }

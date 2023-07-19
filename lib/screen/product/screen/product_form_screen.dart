@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:fl_wms/screen/brand/data/brand.dart';
@@ -34,9 +33,6 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
   ItemCategory category = ItemCategory();
   Brand brand = Brand();
   Product product = Product();
-  File? image;
-
-  Uint8List? webImage;
   final _controller = ValueNotifier<bool>(true);
   final formgroup = FormGroup({
     'code': FormControl<String>(
@@ -174,59 +170,56 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                                     child: Padding(
                                       padding: const EdgeInsets.symmetric(
                                           horizontal: 16.0, vertical: 2),
-                                      child: DottedBorder(
-                                        borderType: BorderType.RRect,
-                                        radius: const Radius.circular(12),
-                                        padding: const EdgeInsets.all(6),
-                                        child: ClipRRect(
-                                          borderRadius: const BorderRadius.all(
-                                              Radius.circular(12)),
-                                          child: GestureDetector(
-                                            onTap: () => picPicture(),
-                                            child: webImage != null
-                                                ? Image.memory(
-                                                    webImage!,
-                                                    fit: BoxFit.fill,
-                                                  )
-                                                : state.product!.image != null
-                                                    ? Image.memory(
-                                                        base64Decode(state
-                                                            .product!.image!),
-                                                        fit: BoxFit.fill,
-                                                      )
-                                                    : Container(
-                                                        height: 150,
-                                                        color: const Color
-                                                                .fromARGB(
-                                                            255, 253, 253, 249),
-                                                        child: const Center(
-                                                          child: Column(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .center,
-                                                            children: [
-                                                              Icon(
-                                                                Icons
-                                                                    .picture_in_picture_sharp,
+                                      child: state.product!.image != null
+                                          ? ClipRRect(
+                                              borderRadius:
+                                                  const BorderRadius.all(
+                                                      Radius.circular(12)),
+                                              child: Image.memory(
+                                                base64Decode(
+                                                    state.product!.image!),
+                                                fit: BoxFit.fill,
+                                              ),
+                                            )
+                                          : DottedBorder(
+                                              borderType: BorderType.RRect,
+                                              radius: const Radius.circular(12),
+                                              padding: const EdgeInsets.all(6),
+                                              child: ClipRRect(
+                                                borderRadius:
+                                                    const BorderRadius.all(
+                                                        Radius.circular(12)),
+                                                child: GestureDetector(
+                                                  onTap: () => picPicture(),
+                                                  child: Container(
+                                                    height: 150,
+                                                    color: const Color.fromARGB(
+                                                        255, 253, 253, 249),
+                                                    child: const Center(
+                                                      child: Column(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                          Icon(
+                                                            Icons
+                                                                .picture_in_picture_sharp,
+                                                            color:
+                                                                Colors.indigo,
+                                                          ),
+                                                          SizedBox(height: 10),
+                                                          Text("Select Picture",
+                                                              style: TextStyle(
                                                                 color: Colors
                                                                     .indigo,
-                                                              ),
-                                                              SizedBox(
-                                                                  height: 10),
-                                                              Text(
-                                                                  "Select Picture",
-                                                                  style:
-                                                                      TextStyle(
-                                                                    color: Colors
-                                                                        .indigo,
-                                                                  )),
-                                                            ],
-                                                          ),
-                                                        ),
+                                                              )),
+                                                        ],
                                                       ),
-                                          ),
-                                        ),
-                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
                                     ),
                                   ),
                                   ResponsiveGridCol(
@@ -242,31 +235,18 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                                           xl: 4,
                                           md: 4,
                                           sm: 12,
-                                          child: Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 16.0, vertical: 2),
-                                            child: BootstrapFormGroup(
-                                              children: [
-                                                const BootstrapLabelText(
-                                                  child: SelectableText(
-                                                      'Max ED IN (in month)'),
-                                                ),
-                                                ReactiveTextField(
-                                                  textAlign: TextAlign.end,
-                                                  keyboardType:
-                                                      TextInputType.number,
-                                                  inputFormatters: <TextInputFormatter>[
-                                                    FilteringTextInputFormatter
-                                                        .digitsOnly
-                                                  ],
-                                                  formControlName:
-                                                      'in_expired_date',
-                                                  onSubmitted: (val) {},
-                                                  decoration:
-                                                      const BootstrapInputDecoration(
-                                                          hintText: "0"),
-                                                ),
-                                              ],
+                                          child: CustomForm(
+                                            formControlName: "in_expired_date",
+                                            title: "Max ED IN (in month)",
+                                            textAlign: TextAlign.end,
+                                            keyboardType: TextInputType.number,
+                                            inputFormatters: <TextInputFormatter>[
+                                              FilteringTextInputFormatter
+                                                  .digitsOnly
+                                            ],
+                                            decoration:
+                                                const BootstrapInputDecoration(
+                                              hintText: "0",
                                             ),
                                           ),
                                         ),
@@ -275,31 +255,18 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                                           xl: 4,
                                           md: 4,
                                           sm: 12,
-                                          child: Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 16.0, vertical: 2),
-                                            child: BootstrapFormGroup(
-                                              children: [
-                                                const BootstrapLabelText(
-                                                  child: SelectableText(
-                                                      'Max ED OUT (in month)'),
-                                                ),
-                                                ReactiveTextField(
-                                                  textAlign: TextAlign.end,
-                                                  keyboardType:
-                                                      TextInputType.number,
-                                                  inputFormatters: <TextInputFormatter>[
-                                                    FilteringTextInputFormatter
-                                                        .digitsOnly
-                                                  ],
-                                                  formControlName:
-                                                      'out_expired_date',
-                                                  onSubmitted: (val) {},
-                                                  decoration:
-                                                      const BootstrapInputDecoration(
-                                                          hintText: "0"),
-                                                ),
-                                              ],
+                                          child: CustomForm(
+                                            formControlName: "out_expired_date",
+                                            title: "Max ED OUT (in month)",
+                                            textAlign: TextAlign.end,
+                                            keyboardType: TextInputType.number,
+                                            inputFormatters: <TextInputFormatter>[
+                                              FilteringTextInputFormatter
+                                                  .digitsOnly
+                                            ],
+                                            decoration:
+                                                const BootstrapInputDecoration(
+                                              hintText: "0",
                                             ),
                                           ),
                                         ),
@@ -308,31 +275,18 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                                           xl: 4,
                                           md: 4,
                                           sm: 12,
-                                          child: Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 16.0, vertical: 2),
-                                            child: BootstrapFormGroup(
-                                              children: [
-                                                const BootstrapLabelText(
-                                                  child: SelectableText(
-                                                      'Reminder Qty'),
-                                                ),
-                                                ReactiveTextField(
-                                                  textAlign: TextAlign.end,
-                                                  formControlName:
-                                                      'reminder_qty',
-                                                  keyboardType:
-                                                      TextInputType.number,
-                                                  inputFormatters: <TextInputFormatter>[
-                                                    FilteringTextInputFormatter
-                                                        .digitsOnly
-                                                  ],
-                                                  onSubmitted: (val) {},
-                                                  decoration:
-                                                      const BootstrapInputDecoration(
-                                                          hintText: "0"),
-                                                ),
-                                              ],
+                                          child: CustomForm(
+                                            formControlName: "reminder_qty",
+                                            title: "Reminder Qty",
+                                            textAlign: TextAlign.end,
+                                            keyboardType: TextInputType.number,
+                                            inputFormatters: <TextInputFormatter>[
+                                              FilteringTextInputFormatter
+                                                  .digitsOnly
+                                            ],
+                                            decoration:
+                                                const BootstrapInputDecoration(
+                                              hintText: "0",
                                             ),
                                           ),
                                         ),
@@ -341,36 +295,8 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                                           xl: 4,
                                           md: 4,
                                           sm: 12,
-                                          child: Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 16.0, vertical: 25),
-                                            child: BootstrapFormGroup(
-                                              direction: Axis.horizontal,
-                                              children: [
-                                                const BootstrapLabelText(
-                                                  child:
-                                                      SelectableText('Status'),
-                                                ),
-                                                AdvancedSwitch(
-                                                  controller: _controller,
-                                                  activeColor:
-                                                      BootstrapColors.success,
-                                                  inactiveColor:
-                                                      BootstrapColors.danger,
-                                                  activeChild:
-                                                      const Text('Active'),
-                                                  inactiveChild:
-                                                      const Text('Inactive'),
-                                                  borderRadius:
-                                                      const BorderRadius.all(
-                                                          Radius.circular(15)),
-                                                  width: 90.0,
-                                                  height: 35.0,
-                                                  enabled: true,
-                                                  disabledOpacity: 0.5,
-                                                ),
-                                              ],
-                                            ),
+                                          child: CustomSwitch(
+                                            controller: _controller,
                                           ),
                                         ),
                                       ],
@@ -384,55 +310,22 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                               xl: 12,
                               md: 12,
                               sm: 12,
-                              child: Padding(
-                                padding: const EdgeInsets.only(
-                                  left: 16.0,
-                                  right: 16,
-                                  top: 25,
-                                  bottom: 25,
-                                ),
-                                child: Center(
-                                  child: SizedBox(
-                                    width: 120,
-                                    child: BootstrapButton(
-                                      size: BootstrapButtonSize.defaults,
-                                      type: BootstrapButtonType.primary,
-                                      onPressed: () {
-                                        product =
-                                            Product.fromJson(formgroup.value);
-                                        product.brand = brand;
-                                        product.category = category;
-                                        // postImage();
-                                        product.image = webImage != null
-                                            ? base64Encode(webImage!)
-                                            : null;
-                                        if (widget.id == null) {
-                                          context
-                                              .read<ProductBloc>()
-                                              .add(PostProduct(product));
-                                        } else {
-                                          product.id = widget.id;
-                                          context
-                                              .read<ProductBloc>()
-                                              .add(PutProduct(product));
-                                        }
-                                      },
-                                      child: const Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          FaIcon(
-                                            FontAwesomeIcons.solidFloppyDisk,
-                                            color: Colors.white,
-                                            size: 20,
-                                          ),
-                                          SizedBox(width: 5),
-                                          Text('Save'),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
+                              child: ButtonSave(
+                                onPressed: () {
+                                  product = Product.fromJson(formgroup.value);
+                                  product.brand = brand;
+                                  product.category = category;
+                                  if (widget.id == null) {
+                                    context
+                                        .read<ProductBloc>()
+                                        .add(PostProduct(product));
+                                  } else {
+                                    product.id = widget.id;
+                                    context
+                                        .read<ProductBloc>()
+                                        .add(PutProduct(product));
+                                  }
+                                },
                               ),
                             )
                           ],
@@ -450,19 +343,91 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
     );
   }
 
-  Future picPicture() async {
+  picPicture() async {
     if (kIsWeb) {
       final ImagePicker picker = ImagePicker();
       XFile? xImage = await picker.pickImage(source: ImageSource.gallery);
       setState(() {});
       if (xImage != null) {
-        webImage = await xImage.readAsBytes();
-        image = File("a");
+        Uint8List? webImage = await xImage.readAsBytes();
+        // ignore: use_build_context_synchronously
+        context.read<ProductBloc>().add(OnTapPicture(webImage));
         setState(() {});
       }
     } else {
       print('err');
     }
+  }
+}
+
+class ButtonSave extends StatelessWidget {
+  final VoidCallback? onPressed;
+  const ButtonSave({super.key, this.onPressed});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(
+        left: 16.0,
+        right: 16,
+        top: 25,
+        bottom: 25,
+      ),
+      child: Center(
+        child: SizedBox(
+          width: 120,
+          child: BootstrapButton(
+            size: BootstrapButtonSize.defaults,
+            type: BootstrapButtonType.primary,
+            onPressed: onPressed,
+            child: const Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                FaIcon(
+                  FontAwesomeIcons.solidFloppyDisk,
+                  color: Colors.white,
+                  size: 20,
+                ),
+                SizedBox(width: 5),
+                Text('Save'),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class CustomSwitch extends StatelessWidget {
+  final ValueNotifier<bool> controller;
+  const CustomSwitch({super.key, required this.controller});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 25),
+      child: BootstrapFormGroup(
+        direction: Axis.horizontal,
+        children: [
+          const BootstrapLabelText(
+            child: SelectableText('Status'),
+          ),
+          AdvancedSwitch(
+            controller: controller,
+            activeColor: BootstrapColors.success,
+            inactiveColor: BootstrapColors.danger,
+            activeChild: const Text('Active'),
+            inactiveChild: const Text('Inactive'),
+            borderRadius: const BorderRadius.all(Radius.circular(15)),
+            width: 90.0,
+            height: 35.0,
+            enabled: true,
+            disabledOpacity: 0.5,
+          ),
+        ],
+      ),
+    );
   }
 }
 
@@ -541,11 +506,20 @@ class CustomForm extends StatelessWidget {
   final bool? readOnly;
   final String title;
   final String formControlName;
-  const CustomForm(
-      {super.key,
-      this.readOnly,
-      required this.title,
-      required this.formControlName});
+  final TextAlign? textAlign;
+  final TextInputType? keyboardType;
+  final List<TextInputFormatter>? inputFormatters;
+  final InputDecoration? decoration;
+  const CustomForm({
+    super.key,
+    this.readOnly,
+    required this.title,
+    required this.formControlName,
+    this.textAlign,
+    this.keyboardType,
+    this.inputFormatters,
+    this.decoration,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -557,10 +531,12 @@ class CustomForm extends StatelessWidget {
             child: SelectableText(title),
           ),
           ReactiveTextField(
-            formControlName: formControlName,
-            readOnly: readOnly ?? false,
-            decoration: const BootstrapInputDecoration(),
-          ),
+              formControlName: formControlName,
+              readOnly: readOnly ?? false,
+              decoration: decoration ?? const BootstrapInputDecoration(),
+              textAlign: textAlign ?? TextAlign.start,
+              keyboardType: keyboardType,
+              inputFormatters: inputFormatters),
         ],
       ),
     );
