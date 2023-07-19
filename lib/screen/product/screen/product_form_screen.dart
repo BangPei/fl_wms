@@ -19,15 +19,15 @@ import 'package:image_picker/image_picker.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:responsive_grid/responsive_grid.dart';
 
-class ProductForm extends StatefulWidget {
+class ProductFormScreen extends StatefulWidget {
   final int? id;
-  const ProductForm({super.key, this.id});
+  const ProductFormScreen({super.key, this.id});
 
   @override
-  State<ProductForm> createState() => _ProductFormState();
+  State<ProductFormScreen> createState() => _ProductFormScreenState();
 }
 
-class _ProductFormState extends State<ProductForm> {
+class _ProductFormScreenState extends State<ProductFormScreen> {
   String title = "";
   bool isActive = true;
   bool readOnly = false;
@@ -36,7 +36,7 @@ class _ProductFormState extends State<ProductForm> {
   Product product = Product();
   File? image;
 
-  Uint8List webImage = Uint8List(8);
+  Uint8List? webImage;
   final _controller = ValueNotifier<bool>(true);
   final formgroup = FormGroup({
     'code': FormControl<String>(
@@ -112,23 +112,10 @@ class _ProductFormState extends State<ProductForm> {
                               xl: 4,
                               md: 4,
                               sm: 12,
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 16.0, vertical: 2),
-                                child: BootstrapFormGroup(
-                                  children: [
-                                    const BootstrapLabelText(
-                                      child: SelectableText('Code'),
-                                    ),
-                                    ReactiveTextField(
-                                      formControlName: 'code',
-                                      readOnly: readOnly,
-                                      onSubmitted: (val) {},
-                                      decoration:
-                                          const BootstrapInputDecoration(),
-                                    ),
-                                  ],
-                                ),
+                              child: CustomForm(
+                                formControlName: "code",
+                                title: "Code",
+                                readOnly: readOnly,
                               ),
                             ),
                             ResponsiveGridCol(
@@ -136,22 +123,9 @@ class _ProductFormState extends State<ProductForm> {
                               xl: 8,
                               md: 8,
                               sm: 12,
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 16.0, vertical: 2),
-                                child: BootstrapFormGroup(
-                                  children: [
-                                    const BootstrapLabelText(
-                                      child: SelectableText('Name'),
-                                    ),
-                                    ReactiveTextField(
-                                      formControlName: 'name',
-                                      onSubmitted: (val) {},
-                                      decoration:
-                                          const BootstrapInputDecoration(),
-                                    ),
-                                  ],
-                                ),
+                              child: const CustomForm(
+                                formControlName: "name",
+                                title: "Product Name",
                               ),
                             ),
                             ResponsiveGridCol(
@@ -159,33 +133,12 @@ class _ProductFormState extends State<ProductForm> {
                               xl: 4,
                               md: 4,
                               sm: 12,
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 16.0, vertical: 2),
-                                child: BootstrapFormGroup(
-                                  children: [
-                                    const BootstrapLabelText(
-                                      child: SelectableText('Brand'),
-                                    ),
-                                    DropdownSearch<Brand>(
-                                      itemAsString: (item) => item.name ?? "",
-                                      popupProps: const PopupProps.menu(
-                                        showSearchBox: true,
-                                      ),
-                                      items: state.brands ?? [],
-                                      dropdownBuilder: (c, b) {
-                                        return Text(b?.name ?? "");
-                                      },
-                                      dropdownDecoratorProps:
-                                          const DropDownDecoratorProps(
-                                        dropdownSearchDecoration:
-                                            BootstrapInputDecoration(),
-                                      ),
-                                      onChanged: (br) => brand = br!,
-                                      selectedItem: brand,
-                                    ),
-                                  ],
-                                ),
+                              child: CustomDropDown<Brand>(
+                                title: "Brand",
+                                items: state.brands ?? [],
+                                itemAsString: (item) => item.name ?? "",
+                                onChanged: (br) => brand = br!,
+                                selectedItem: brand,
                               ),
                             ),
                             ResponsiveGridCol(
@@ -193,30 +146,12 @@ class _ProductFormState extends State<ProductForm> {
                               xl: 4,
                               md: 4,
                               sm: 12,
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 16.0, vertical: 2),
-                                child: BootstrapFormGroup(
-                                  children: [
-                                    const BootstrapLabelText(
-                                      child: SelectableText('Category'),
-                                    ),
-                                    DropdownSearch<ItemCategory>(
-                                      itemAsString: (item) => item.name ?? "",
-                                      popupProps: const PopupProps.menu(
-                                        showSearchBox: true,
-                                      ),
-                                      items: state.categories ?? [],
-                                      dropdownDecoratorProps:
-                                          const DropDownDecoratorProps(
-                                        dropdownSearchDecoration:
-                                            BootstrapInputDecoration(),
-                                      ),
-                                      onChanged: (ct) => category = ct!,
-                                      selectedItem: category,
-                                    ),
-                                  ],
-                                ),
+                              child: CustomDropDown<ItemCategory>(
+                                title: "Category",
+                                items: state.categories ?? [],
+                                itemAsString: (item) => item.name ?? "",
+                                onChanged: (ct) => category = ct!,
+                                selectedItem: category,
                               ),
                             ),
                             ResponsiveGridCol(
@@ -224,35 +159,8 @@ class _ProductFormState extends State<ProductForm> {
                               xl: 4,
                               md: 4,
                               sm: 12,
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 16.0, vertical: 2),
-                                child: BootstrapFormGroup(
-                                  children: [
-                                    const BootstrapLabelText(
-                                      child:
-                                          SelectableText('Product Moving Flow'),
-                                    ),
-                                    ReactiveDropdownField<String>(
-                                      hint: const Text('Select Moving Flow...'),
-                                      formControlName: 'moving',
-                                      decoration:
-                                          const BootstrapInputDecoration(),
-                                      items: const [
-                                        DropdownMenuItem(
-                                            value: "FAST",
-                                            child: Text("FAST MOVING")),
-                                        DropdownMenuItem(
-                                            value: "MEDIUM",
-                                            child: Text("MEDIUM MOVING")),
-                                        DropdownMenuItem(
-                                            value: "SLOW",
-                                            child: Text("SLOW MOVING")),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
+                              child: const DropdownMoving(
+                                  formControlName: "moving"),
                             ),
                             ResponsiveGridCol(
                               child: ResponsiveGridRow(
@@ -275,9 +183,9 @@ class _ProductFormState extends State<ProductForm> {
                                               Radius.circular(12)),
                                           child: GestureDetector(
                                             onTap: () => picPicture(),
-                                            child: image != null
+                                            child: webImage != null
                                                 ? Image.memory(
-                                                    webImage,
+                                                    webImage!,
                                                     fit: BoxFit.fill,
                                                   )
                                                 : state.product!.image != null
@@ -495,7 +403,9 @@ class _ProductFormState extends State<ProductForm> {
                                         product.brand = brand;
                                         product.category = category;
                                         // postImage();
-                                        product.image = base64Encode(webImage);
+                                        product.image = webImage != null
+                                            ? base64Encode(webImage!)
+                                            : null;
                                         if (widget.id == null) {
                                           context
                                               .read<ProductBloc>()
@@ -554,15 +464,105 @@ class _ProductFormState extends State<ProductForm> {
       print('err');
     }
   }
+}
 
-  // Future postImage() async {
-  //   Uri uri = Uri.parse("${Api.baseUrl()}product");
-  //   var request = http.MultipartRequest("POST", uri);
-  //   List<int> list = webImage.cast();
-  //   request.fields.addAll(product.toJsonString());
-  //   request.files.add(http.MultipartFile.fromBytes('image', list));
-  //   var response = await request.send();
+class DropdownMoving extends StatelessWidget {
+  final String formControlName;
+  const DropdownMoving({super.key, required this.formControlName});
 
-  //   print(response.statusCode);
-  // }
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 2),
+      child: BootstrapFormGroup(
+        children: [
+          const BootstrapLabelText(
+            child: SelectableText('Product Moving Flow'),
+          ),
+          ReactiveDropdownField<String>(
+            hint: const Text('Select Moving Flow...'),
+            formControlName: formControlName,
+            decoration: const BootstrapInputDecoration(),
+            items: const [
+              DropdownMenuItem(value: "FAST", child: Text("FAST MOVING")),
+              DropdownMenuItem(value: "MEDIUM", child: Text("MEDIUM MOVING")),
+              DropdownMenuItem(value: "SLOW", child: Text("SLOW MOVING")),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class CustomDropDown<T> extends StatelessWidget {
+  final String title;
+  final DropdownSearchItemAsString<T>? itemAsString;
+  final List<T> items;
+  final ValueChanged<T?>? onChanged;
+  final T? selectedItem;
+  const CustomDropDown({
+    super.key,
+    this.itemAsString,
+    required this.items,
+    this.onChanged,
+    this.selectedItem,
+    required this.title,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 2),
+      child: BootstrapFormGroup(
+        children: [
+          BootstrapLabelText(
+            child: SelectableText(title),
+          ),
+          DropdownSearch<T>(
+            itemAsString: itemAsString,
+            popupProps: const PopupProps.menu(
+              showSearchBox: true,
+            ),
+            items: items,
+            dropdownDecoratorProps: const DropDownDecoratorProps(
+              dropdownSearchDecoration: BootstrapInputDecoration(),
+            ),
+            onChanged: onChanged,
+            selectedItem: selectedItem,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class CustomForm extends StatelessWidget {
+  final bool? readOnly;
+  final String title;
+  final String formControlName;
+  const CustomForm(
+      {super.key,
+      this.readOnly,
+      required this.title,
+      required this.formControlName});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 2),
+      child: BootstrapFormGroup(
+        children: [
+          BootstrapLabelText(
+            child: SelectableText(title),
+          ),
+          ReactiveTextField(
+            formControlName: formControlName,
+            readOnly: readOnly ?? false,
+            decoration: const BootstrapInputDecoration(),
+          ),
+        ],
+      ),
+    );
+  }
 }

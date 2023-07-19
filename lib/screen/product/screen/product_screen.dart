@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:fl_wms/models/datatable_model.dart';
 import 'package:fl_wms/screen/product/bloc/product_bloc.dart';
 import 'package:fl_wms/screen/product/data/product.dart';
@@ -268,15 +270,20 @@ class ListViewProduct extends StatelessWidget {
                     splashColor: Colors.white10, // Splash color over image
                     child: Padding(
                       padding: const EdgeInsets.all(10.0),
-                      child: Image(
-                        image: NetworkImage((product?.image != "" &&
-                                product?.image != null)
-                            ? product!.image!
-                            : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQVYi-GBPwUrFwKpkfGeu9khpg6smHZTIRHFd-5VAtI&s"),
-                        height: 60,
-                        width: 60,
-                        // fit: BoxFit.fill,
-                      ),
+                      child:
+                          ((product!.image == null) || (product!.image == ""))
+                              ? const Image(
+                                  image: NetworkImage(
+                                      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQVYi-GBPwUrFwKpkfGeu9khpg6smHZTIRHFd-5VAtI&s"),
+                                  height: 60,
+                                  width: 60,
+                                  // fit: BoxFit.fill,
+                                )
+                              : Image.memory(
+                                  base64Decode(product!.image!),
+                                  height: 60,
+                                  width: 60,
+                                ),
                     ),
                   ),
                 ),

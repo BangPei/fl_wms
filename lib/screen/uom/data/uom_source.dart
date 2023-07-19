@@ -26,10 +26,7 @@ class UomSource extends AdvancedDataTableSource<Uom> {
       value: '',
       validators: [Validators.required],
     ),
-    'alias': FormControl<String>(
-      value: '',
-      validators: [Validators.required],
-    ),
+    'alias': FormControl<String>(value: ''),
     'is_active': FormControl<bool>(value: true)
   });
 
@@ -158,30 +155,15 @@ class UomSource extends AdvancedDataTableSource<Uom> {
         formgroup.control('is_active').value = isActive;
       });
       _draw = _draw + 1;
-      Map<String, dynamic> map = {
-        "draw": _draw.toString(),
-        "columns[0][data]": "name",
-        "columns[0][searchable]": "true",
-        "columns[0][orderable]": "true",
-        "columns[0][search][regex]": "false",
-        "columns[1][data]": "alias",
-        "columns[1][searchable]": "true",
-        "columns[1][orderable]": "true",
-        "columns[1][search][regex]": "false",
-        "columns[2][data]": "is_active",
-        "columns[2][searchable]": "true",
-        "columns[2][orderable]": "true",
-        "columns[2][search][regex]": "false",
-        "columns[3][data]": "id",
-        "columns[3][search][regex]": "false",
-        "order[0][column]": pageRequest.columnSortIndex.toString(),
-        "order[0][dir]": (pageRequest.sortAscending ?? false) ? "asc" : "desc",
-        "start": pageRequest.offset.toString(),
-        "length": pageRequest.pageSize.toString(),
-        "search[value]": searchText
-      };
-      DataTableModel dataTable =
-          await Api.getDataTable("/api/uom/dataTable", query: map);
+      DataTableModel dataTable = await Api.getDataTable(
+        "/api/uom/dataTable",
+        start: pageRequest.offset,
+        length: pageRequest.pageSize,
+        draw: _draw,
+        orderColumn: pageRequest.columnSortIndex,
+        orderdir: (pageRequest.sortAscending ?? false) ? "asc" : "desc",
+        searchText: searchText,
+      );
       List<Uom> uoms =
           (dataTable.data ?? []).map((e) => Uom.fromJson(e)).toList();
       return RemoteDataSourceDetails(
@@ -202,7 +184,6 @@ class UomSource extends AdvancedDataTableSource<Uom> {
   openModal({Uom? uom}) async {
     if (uom != null) {
       formgroup.control("name").value = uom.name;
-      formgroup.control("alias").value = uom.alias;
       _controller.value = uom.isActive!;
       formgroup.control('is_active').value = uom.isActive;
     }
@@ -297,9 +278,6 @@ class UomSource extends AdvancedDataTableSource<Uom> {
           ],
         ),
       ),
-    ).then((value) {
-      formgroup.control("name").value = "";
-      formgroup.control("alias").value = "";
-    });
+    ).then((value) => formgroup.control("name").value = "");
   }
 }
