@@ -1,6 +1,9 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:fl_wms/library/common.dart';
 import 'package:fl_wms/library/interceptor/injector.dart';
 import 'package:fl_wms/library/interceptor/navigation_service.dart';
 import 'package:fl_wms/models/datatable_model.dart';
@@ -31,12 +34,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
     on<PutProduct>(_putProduct);
     on<ProductStandbyForm>(_productStandByForm);
     on<SearchProduct>(_searchProduct);
-    on<ProductEvent>((event, emit) async {
-      if (event is OnTapPicture) {
-        ProductState productState = await _onTapPicture(event, emit);
-        emit(productState);
-      }
-    });
+    on<OnTapPicture>(_onTapPicture);
   }
 
   void _getDataTable(GetDataTable event, Emitter<ProductState> emit) async {
@@ -91,17 +89,31 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
   }
 
   void _postProduct(PostProduct event, Emitter<ProductState> emit) async {
-    emit(ProductLoadingState());
+    // emit(ProductLoadingDialogState());
     try {
-      await ProductApi.postProduct(event.product);
-      // ignore: use_build_context_synchronously
-      _nav.navKey.currentContext!.goNamed("product");
+      BuildContext context = _nav.navKey.currentContext!;
+      final state = BlocProvider.of<ProductBloc>(context).state;
+      if (state is ProductFormState) {
+        Product product = event.product;
+        product.image = state.product?.image;
+        Common.modalLoading(context);
+        await ProductApi.postProduct(product);
+        Navigator.pop(context);
+        Future.delayed(
+          const Duration(microseconds: 500),
+          () {
+            Common.modalSuccess(context);
+          },
+        );
+        context.goNamed("product");
+        Navigator.pop(context);
+      }
     } catch (e) {
       emit(ProductErrorState());
     }
   }
 
-  Future _onTapPicture(OnTapPicture event, Emitter<ProductState> emit) async {
+  _onTapPicture(OnTapPicture event, Emitter<ProductState> emit) {
     try {
       final state =
           BlocProvider.of<ProductBloc>(_nav.navKey.currentContext!).state;

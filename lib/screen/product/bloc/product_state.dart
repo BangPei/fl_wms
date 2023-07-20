@@ -9,6 +9,10 @@ class ProductLoadingState extends ProductState {
   List<Object?> get props => [];
 }
 
+class ProductLoadingDialogState extends ProductState {
+  List<Object?> get props => [];
+}
+
 class ProductErrorState extends ProductState {
   List<Object?> get props => [];
 }

@@ -8,14 +8,17 @@ class Common {
     BootstrapModalSize size, {
     required String title,
     Widget? content,
+    bool? showSaveButton,
+    bool? dismissble,
     VoidCallback? onSave,
+    VoidCallback? onClose,
   }) async {
     await showDialog(
       context: context,
       builder: (BuildContext context) {
         return BootstrapModal(
           size: size,
-          dismissble: true,
+          dismissble: dismissble ?? true,
           title: Text(title),
           content: content ??
               const Text(
@@ -23,20 +26,82 @@ class Common {
           actions: [
             BootstrapButton(
               type: BootstrapButtonType.defaults,
+              onPressed: onClose ??
+                  () {
+                    Navigator.of(context).pop();
+                  },
               child: const Text('Close'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
             ),
-            BootstrapButton(
-              type: BootstrapButtonType.primary,
-              onPressed: () {
-                Navigator.of(context).pop();
-                onSave!();
-              },
-              child: const Text('Save'),
+            Visibility(
+              visible: showSaveButton ?? true,
+              child: BootstrapButton(
+                type: BootstrapButtonType.primary,
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  onSave!();
+                },
+                child: const Text('Save'),
+              ),
             ),
           ],
+        );
+      },
+    );
+  }
+
+  static modalLoading(BuildContext context) {
+    showDialog(
+      // The user CANNOT close this dialog  by pressing outsite it
+      barrierDismissible: false,
+      context: context,
+      builder: (_) {
+        return const Dialog(
+          backgroundColor: Colors.white,
+          child: Padding(
+            padding: EdgeInsets.symmetric(vertical: 20),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                CircularProgressIndicator(),
+                SizedBox(height: 15),
+                // Some text
+                Text('Please Wait...')
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  static Future modalSuccess(BuildContext context) async {
+    await showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (_) {
+        return const Dialog(
+          backgroundColor: Colors.white,
+          child: Padding(
+            padding: EdgeInsets.symmetric(vertical: 20),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                FaIcon(
+                  FontAwesomeIcons.circleCheck,
+                  color: BootstrapColors.success,
+                  size: 50,
+                ),
+                SizedBox(height: 30),
+                Text(
+                  "Success",
+                  style: TextStyle(
+                    fontSize: 30,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+          ),
         );
       },
     );

@@ -531,12 +531,16 @@ class CustomForm extends StatelessWidget {
             child: SelectableText(title),
           ),
           ReactiveTextField(
-              formControlName: formControlName,
-              readOnly: readOnly ?? false,
-              decoration: decoration ?? const BootstrapInputDecoration(),
-              textAlign: textAlign ?? TextAlign.start,
-              keyboardType: keyboardType,
-              inputFormatters: inputFormatters),
+            formControlName: formControlName,
+            readOnly: readOnly ?? false,
+            decoration: decoration ?? const BootstrapInputDecoration(),
+            textAlign: textAlign ?? TextAlign.start,
+            keyboardType: keyboardType,
+            inputFormatters: inputFormatters,
+            onChanged: (val) {
+              print(val.value);
+            },
+          ),
         ],
       ),
     );
