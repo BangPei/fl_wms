@@ -33,6 +33,7 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
   ItemCategory category = ItemCategory();
   Brand brand = Brand();
   Product product = Product();
+  List<ItemConvertion> convertions = [];
   final _controller = ValueNotifier<bool>(true);
   final formgroup = FormGroup({
     'code': FormControl<String>(
@@ -306,6 +307,42 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                               ),
                             ),
                             ResponsiveGridCol(
+                              child: Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: BootstrapPanel(
+                                  type: BootstrapPanelType.defaults,
+                                  header: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      const Text(
+                                        "Items Convertion",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: 15),
+                                      ),
+                                      ButtonSave(
+                                        title: "Add Items",
+                                        iconData: FontAwesomeIcons.circlePlus,
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 8),
+                                        onPressed: () {},
+                                      )
+                                    ],
+                                  ),
+                                  body: DataTable(columns: const [
+                                    DataColumn(label: Text("NO")),
+                                    DataColumn(label: Text("SKU")),
+                                    DataColumn(label: Text("Name")),
+                                    DataColumn(label: Text("Convertion")),
+                                    DataColumn(label: Text("Sale Price")),
+                                    DataColumn(label: Text("UOM")),
+                                  ], rows: []),
+                                  // footer: const SelectableText('Panel Footer'),
+                                ),
+                              ),
+                            ),
+                            ResponsiveGridCol(
                               lg: 12,
                               xl: 12,
                               md: 12,
@@ -362,34 +399,39 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
 
 class ButtonSave extends StatelessWidget {
   final VoidCallback? onPressed;
-  const ButtonSave({super.key, this.onPressed});
+  final EdgeInsetsGeometry? padding;
+  final IconData? iconData;
+  final String? title;
+  const ButtonSave(
+      {super.key, this.onPressed, this.iconData, this.title, this.padding});
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(
-        left: 16.0,
-        right: 16,
-        top: 25,
-        bottom: 25,
-      ),
+      padding: padding ??
+          const EdgeInsets.only(
+            left: 16.0,
+            right: 16,
+            top: 25,
+            bottom: 25,
+          ),
       child: Center(
         child: SizedBox(
-          width: 120,
+          width: 130,
           child: BootstrapButton(
             size: BootstrapButtonSize.defaults,
             type: BootstrapButtonType.primary,
             onPressed: onPressed,
-            child: const Row(
+            child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 FaIcon(
-                  FontAwesomeIcons.solidFloppyDisk,
+                  iconData ?? FontAwesomeIcons.solidFloppyDisk,
                   color: Colors.white,
                   size: 20,
                 ),
-                SizedBox(width: 5),
-                Text('Save'),
+                const SizedBox(width: 5),
+                Text(title ?? "save"),
               ],
             ),
           ),
