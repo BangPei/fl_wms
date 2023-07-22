@@ -326,18 +326,61 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                                         iconData: FontAwesomeIcons.circlePlus,
                                         padding: const EdgeInsets.symmetric(
                                             horizontal: 8),
-                                        onPressed: () {},
+                                        onPressed: () {
+                                          ItemConvertion item = ItemConvertion(
+                                            name: "Test 1",
+                                            qty: 2,
+                                            salePrice: 20000,
+                                            uom: null,
+                                            sku: "123456789",
+                                          );
+                                          convertions.add(item);
+                                          setState(() {});
+                                        },
                                       )
                                     ],
                                   ),
-                                  body: DataTable(columns: const [
-                                    DataColumn(label: Text("NO")),
-                                    DataColumn(label: Text("SKU")),
-                                    DataColumn(label: Text("Name")),
-                                    DataColumn(label: Text("Convertion")),
-                                    DataColumn(label: Text("Sale Price")),
-                                    DataColumn(label: Text("UOM")),
-                                  ], rows: []),
+                                  body: DataTable(
+                                      headingRowHeight: 40,
+                                      dataRowMinHeight: 20,
+                                      dataRowMaxHeight: 40,
+                                      columns: [
+                                        DataColumn(
+                                            label: Container(
+                                          constraints: const BoxConstraints(
+                                              maxWidth: 30, minWidth: 30),
+                                          child: const Text("No"),
+                                        )),
+                                        const DataColumn(label: Text("SKU")),
+                                        const DataColumn(label: Text("Name")),
+                                        const DataColumn(
+                                            label: Text("Convertion")),
+                                        const DataColumn(
+                                            label: Text("Sale Price")),
+                                        const DataColumn(label: Text("UOM")),
+                                        const DataColumn(label: Text("Action")),
+                                      ],
+                                      rows: convertions
+                                          .asMap()
+                                          .map((i, e) {
+                                            return MapEntry(
+                                                i,
+                                                DataRow(cells: [
+                                                  DataCell(
+                                                      Text((i + 1).toString())),
+                                                  DataCell(TextFormField()),
+                                                  DataCell(Text(e.name ?? "")),
+                                                  DataCell(
+                                                      Text(e.qty.toString())),
+                                                  DataCell(Text(
+                                                      e.salePrice.toString())),
+                                                  DataCell(
+                                                      Text(e.uom?.name ?? "")),
+                                                  const DataCell(Text("Edit")),
+                                                ]));
+                                          })
+                                          .values
+                                          .toList()),
                                   // footer: const SelectableText('Panel Footer'),
                                 ),
                               ),
