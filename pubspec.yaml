@@ -48,6 +48,7 @@ dependencies:
   web_smooth_scroll: ^1.1.0
   dropdown_search: ^5.0.6
   image_picker: ^1.0.1
+  intl:
   # image_picker_for_web: ^2.2.0
   dotted_border: ^2.0.0+3
   flutter:

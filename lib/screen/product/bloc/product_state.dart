@@ -20,12 +20,15 @@ class ProductErrorState extends ProductState {
 class ProductFormState extends ProductState {
   final Product? product;
   final List<Brand>? brands;
+  final List<Uom>? uoms;
   final List<ItemCategory>? categories;
-  const ProductFormState({this.product, this.brands, this.categories});
-  ProductFormState copyWith({product, brands, categories}) {
+  const ProductFormState(
+      {this.product, this.brands, this.categories, this.uoms});
+  ProductFormState copyWith({product, brands, categories, uoms}) {
     return ProductFormState(
       brands: brands ?? this.brands,
       product: product ?? this.product,
+      uoms: uoms ?? this.uoms,
       categories: categories ?? this.categories,
     );
   }

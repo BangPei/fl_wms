@@ -1,10 +1,13 @@
 import 'dart:convert';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:dropdown_search/dropdown_search.dart';
+import 'package:fl_wms/library/common.dart';
+import 'package:fl_wms/library/currency_formater.dart';
 import 'package:fl_wms/screen/brand/data/brand.dart';
 import 'package:fl_wms/screen/category/data/item_category.dart';
 import 'package:fl_wms/screen/product/bloc/product_bloc.dart';
 import 'package:fl_wms/screen/product/data/product.dart';
+import 'package:fl_wms/screen/uom/data/uom.dart';
 import 'package:fl_wms/widget/card_template.dart';
 import 'package:fl_wms/widget/loading_shimmer.dart';
 import 'package:flutter/foundation.dart';
@@ -15,6 +18,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bootstrap_widgets/bootstrap_widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:responsive_grid/responsive_grid.dart';
 
@@ -34,6 +38,7 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
   Brand brand = Brand();
   Product product = Product();
   List<ItemConvertion> convertions = [];
+  final _currency = NumberFormat("#,##0", "en_US");
   final _controller = ValueNotifier<bool>(true);
   final formgroup = FormGroup({
     'code': FormControl<String>(
@@ -342,23 +347,15 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                                   ),
                                   body: DataTable(
                                       headingRowHeight: 40,
-                                      dataRowMinHeight: 20,
-                                      dataRowMaxHeight: 40,
-                                      columns: [
-                                        DataColumn(
-                                            label: Container(
-                                          constraints: const BoxConstraints(
-                                              maxWidth: 30, minWidth: 30),
-                                          child: const Text("No"),
-                                        )),
-                                        const DataColumn(label: Text("SKU")),
-                                        const DataColumn(label: Text("Name")),
-                                        const DataColumn(
-                                            label: Text("Convertion")),
-                                        const DataColumn(
-                                            label: Text("Sale Price")),
-                                        const DataColumn(label: Text("UOM")),
-                                        const DataColumn(label: Text("Action")),
+                                      columnSpacing: 5,
+                                      columns: const [
+                                        DataColumn(label: Text("No")),
+                                        DataColumn(label: Text("SKU")),
+                                        DataColumn(label: Text("Name")),
+                                        DataColumn(label: Text("Convertion")),
+                                        DataColumn(label: Text("Sale Price")),
+                                        DataColumn(label: Text("UOM")),
+                                        DataColumn(label: Text("Action")),
                                       ],
                                       rows: convertions
                                           .asMap()
@@ -368,15 +365,95 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                                                 DataRow(cells: [
                                                   DataCell(
                                                       Text((i + 1).toString())),
-                                                  DataCell(TextFormField()),
-                                                  DataCell(Text(e.name ?? "")),
+                                                  DataCell(FormFieldTable(
+                                                    value: e.sku,
+                                                    hinText: "SKU",
+                                                    onChanged: (val) =>
+                                                        e.sku = val,
+                                                  )),
+                                                  DataCell(FormFieldTable(
+                                                    value: e.name,
+                                                    hinText: "Name",
+                                                    onChanged: (val) =>
+                                                        e.name = val,
+                                                  )),
+                                                  DataCell(FormFieldTable(
+                                                    value:
+                                                        _currency.format(e.qty),
+                                                    hinText: "Qty Convertion",
+                                                    inputFormatters: [
+                                                      FilteringTextInputFormatter
+                                                          .digitsOnly,
+                                                      CurrencyInputFormatter(),
+                                                    ],
+                                                    onChanged: (val) {
+                                                      int value = (val == "")
+                                                          ? int.parse("0")
+                                                          : int.parse(
+                                                              val.replaceAll(
+                                                                  ",", ""));
+                                                      e.qty =
+                                                          value < 1 ? 0 : value;
+                                                    },
+                                                  )),
+                                                  DataCell(FormFieldTable(
+                                                    value: _currency
+                                                        .format(e.salePrice),
+                                                    hinText: "Sale Price",
+                                                    onChanged: (val) {
+                                                      double value = (val == "")
+                                                          ? double.parse("0")
+                                                          : double.parse(
+                                                              val.replaceAll(
+                                                                  ",", ""));
+                                                      e.salePrice =
+                                                          value < 1 ? 0 : value;
+                                                    },
+                                                  )),
                                                   DataCell(
-                                                      Text(e.qty.toString())),
-                                                  DataCell(Text(
-                                                      e.salePrice.toString())),
-                                                  DataCell(
-                                                      Text(e.uom?.name ?? "")),
-                                                  const DataCell(Text("Edit")),
+                                                      Text(
+                                                        e.uom?.name ??
+                                                            "--Select UOM--",
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                      ),
+                                                      showEditIcon: true,
+                                                      onTap: () {
+                                                    Common.modalBootstrapt(
+                                                        context,
+                                                        BootstrapModalSize
+                                                            .small,
+                                                        title: "Edit UOM",
+                                                        showSaveButton: false,
+                                                        content:
+                                                            CustomDropDown<Uom>(
+                                                          title: "Uom",
+                                                          showTitle: false,
+                                                          items:
+                                                              state.uoms ?? [],
+                                                          itemAsString:
+                                                              (item) =>
+                                                                  item.name ??
+                                                                  "",
+                                                          onChanged: (uom) {
+                                                            e.uom = uom!;
+                                                            setState(() {});
+                                                          },
+                                                          selectedItem: e.uom,
+                                                        ));
+                                                  }),
+                                                  const DataCell(
+                                                    InkWell(
+                                                        child: Text("Remove",
+                                                            style: TextStyle(
+                                                              fontSize: 15,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              color:
+                                                                  Colors.indigo,
+                                                            ))),
+                                                  ),
                                                 ]));
                                           })
                                           .values
@@ -437,6 +514,36 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
     } else {
       print('err');
     }
+  }
+}
+
+class FormFieldTable extends StatelessWidget {
+  final ValueChanged<String>? onChanged;
+  final String? value;
+  final String? hinText;
+  final TextAlign? textAlign;
+  final List<TextInputFormatter>? inputFormatters;
+  const FormFieldTable({
+    super.key,
+    this.onChanged,
+    this.value,
+    this.hinText,
+    this.inputFormatters,
+    this.textAlign,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      child: TextFormField(
+        onChanged: onChanged,
+        inputFormatters: inputFormatters,
+        textAlign: textAlign ?? TextAlign.start,
+        initialValue: value,
+        decoration: BootstrapInputDecoration(hintText: hinText),
+      ),
+    );
   }
 }
 
@@ -546,28 +653,36 @@ class DropdownMoving extends StatelessWidget {
 }
 
 class CustomDropDown<T> extends StatelessWidget {
-  final String title;
+  final String? title;
   final DropdownSearchItemAsString<T>? itemAsString;
   final List<T> items;
   final ValueChanged<T?>? onChanged;
   final T? selectedItem;
+  final bool? showTitle;
+  final EdgeInsetsGeometry? padding;
   const CustomDropDown({
     super.key,
     this.itemAsString,
     required this.items,
     this.onChanged,
     this.selectedItem,
-    required this.title,
+    this.title,
+    this.showTitle,
+    this.padding,
   });
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 2),
+      padding:
+          padding ?? const EdgeInsets.symmetric(horizontal: 16.0, vertical: 2),
       child: BootstrapFormGroup(
         children: [
-          BootstrapLabelText(
-            child: SelectableText(title),
+          Visibility(
+            visible: showTitle ?? true,
+            child: BootstrapLabelText(
+              child: SelectableText(title ?? ""),
+            ),
           ),
           DropdownSearch<T>(
             itemAsString: itemAsString,
@@ -622,9 +737,6 @@ class CustomForm extends StatelessWidget {
             textAlign: textAlign ?? TextAlign.start,
             keyboardType: keyboardType,
             inputFormatters: inputFormatters,
-            onChanged: (val) {
-              print(val.value);
-            },
           ),
         ],
       ),

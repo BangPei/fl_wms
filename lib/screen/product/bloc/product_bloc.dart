@@ -13,6 +13,8 @@ import 'package:fl_wms/screen/category/data/item_category.dart';
 import 'package:fl_wms/screen/category/data/category_api.dart';
 import 'package:fl_wms/screen/product/data/product.dart';
 import 'package:fl_wms/screen/product/data/product_api.dart';
+import 'package:fl_wms/screen/uom/data/uom.dart';
+import 'package:fl_wms/screen/uom/data/uom_api.dart';
 import 'package:fl_wms/service/api.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -26,6 +28,9 @@ Map<String, dynamic> query = {};
 int _draw = 0;
 List<String> columns = ['code', 'name', 'brand', 'category', 'updated_at'];
 final NavigationService _nav = locator<NavigationService>();
+List<ItemCategory> categories = [];
+List<Uom> uoms = [];
+List<Brand> brands = [];
 
 class ProductBloc extends Bloc<ProductEvent, ProductState> {
   ProductBloc() : super(ProductLoadingState()) {
@@ -131,14 +136,21 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       ProductStandbyForm event, Emitter<ProductState> emit) async {
     emit(ProductLoadingState());
     try {
-      List<ItemCategory> categories = await CategoryApi.getCategories();
-      List<Brand> brands = await BrandApi.getBrands();
+      await Future.wait([
+        CategoryApi.getCategories().then((value) => categories = value),
+        BrandApi.getBrands().then((value) => brands = value),
+        UomApi.getUoms().then((value) => uoms = value),
+      ]);
       Product product = Product();
       if (event.id != null) {
         product = await ProductApi.getProduct(event.id!);
       }
       emit(ProductFormState(
-          product: product, categories: categories, brands: brands));
+        product: product,
+        categories: categories,
+        brands: brands,
+        uoms: uoms,
+      ));
     } catch (e) {
       emit(ProductErrorState());
     }
