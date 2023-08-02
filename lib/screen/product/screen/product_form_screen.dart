@@ -476,7 +476,6 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                         ),
                         onTap: () {
                           convertions.removeWhere((f) => f == e);
-                          setState(() {});
                         },
                       ),
                     ),
