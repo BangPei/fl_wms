@@ -345,119 +345,7 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                                       )
                                     ],
                                   ),
-                                  body: DataTable(
-                                      headingRowHeight: 40,
-                                      columnSpacing: 5,
-                                      columns: const [
-                                        DataColumn(label: Text("No")),
-                                        DataColumn(label: Text("SKU")),
-                                        DataColumn(label: Text("Name")),
-                                        DataColumn(label: Text("Convertion")),
-                                        DataColumn(label: Text("Sale Price")),
-                                        DataColumn(label: Text("UOM")),
-                                        DataColumn(label: Text("Action")),
-                                      ],
-                                      rows: convertions
-                                          .asMap()
-                                          .map((i, e) {
-                                            return MapEntry(
-                                                i,
-                                                DataRow(cells: [
-                                                  DataCell(
-                                                      Text((i + 1).toString())),
-                                                  DataCell(FormFieldTable(
-                                                    value: e.sku,
-                                                    hinText: "SKU",
-                                                    onChanged: (val) =>
-                                                        e.sku = val,
-                                                  )),
-                                                  DataCell(FormFieldTable(
-                                                    value: e.name,
-                                                    hinText: "Name",
-                                                    onChanged: (val) =>
-                                                        e.name = val,
-                                                  )),
-                                                  DataCell(FormFieldTable(
-                                                    value:
-                                                        _currency.format(e.qty),
-                                                    hinText: "Qty Convertion",
-                                                    inputFormatters: [
-                                                      FilteringTextInputFormatter
-                                                          .digitsOnly,
-                                                      CurrencyInputFormatter(),
-                                                    ],
-                                                    onChanged: (val) {
-                                                      int value = (val == "")
-                                                          ? int.parse("0")
-                                                          : int.parse(
-                                                              val.replaceAll(
-                                                                  ",", ""));
-                                                      e.qty =
-                                                          value < 1 ? 0 : value;
-                                                    },
-                                                  )),
-                                                  DataCell(FormFieldTable(
-                                                    value: _currency
-                                                        .format(e.salePrice),
-                                                    hinText: "Sale Price",
-                                                    onChanged: (val) {
-                                                      double value = (val == "")
-                                                          ? double.parse("0")
-                                                          : double.parse(
-                                                              val.replaceAll(
-                                                                  ",", ""));
-                                                      e.salePrice =
-                                                          value < 1 ? 0 : value;
-                                                    },
-                                                  )),
-                                                  DataCell(
-                                                      Text(
-                                                        e.uom?.name ??
-                                                            "--Select UOM--",
-                                                        textAlign:
-                                                            TextAlign.center,
-                                                      ),
-                                                      showEditIcon: true,
-                                                      onTap: () {
-                                                    Common.modalBootstrapt(
-                                                        context,
-                                                        BootstrapModalSize
-                                                            .small,
-                                                        title: "Edit UOM",
-                                                        showSaveButton: false,
-                                                        content:
-                                                            CustomDropDown<Uom>(
-                                                          title: "Uom",
-                                                          showTitle: false,
-                                                          items:
-                                                              state.uoms ?? [],
-                                                          itemAsString:
-                                                              (item) =>
-                                                                  item.name ??
-                                                                  "",
-                                                          onChanged: (uom) {
-                                                            e.uom = uom!;
-                                                            setState(() {});
-                                                          },
-                                                          selectedItem: e.uom,
-                                                        ));
-                                                  }),
-                                                  const DataCell(
-                                                    InkWell(
-                                                        child: Text("Remove",
-                                                            style: TextStyle(
-                                                              fontSize: 15,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                              color:
-                                                                  Colors.indigo,
-                                                            ))),
-                                                  ),
-                                                ]));
-                                          })
-                                          .values
-                                          .toList()),
+                                  body: showTable(state.uoms ?? []),
                                   // footer: const SelectableText('Panel Footer'),
                                 ),
                               ),
@@ -498,6 +386,104 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
         ),
       ),
     );
+  }
+
+  DataTable showTable(List<Uom> uoms) {
+    return DataTable(
+        headingRowHeight: 40,
+        columnSpacing: 5,
+        columns: const [
+          DataColumn(label: Text("No")),
+          DataColumn(label: Text("SKU")),
+          DataColumn(label: Text("Name")),
+          DataColumn(label: Text("Convertion")),
+          DataColumn(label: Text("Sale Price")),
+          DataColumn(label: Text("UOM")),
+          DataColumn(label: Text("Action")),
+        ],
+        rows: convertions
+            .asMap()
+            .map((i, e) {
+              return MapEntry(
+                  i,
+                  DataRow(cells: [
+                    DataCell(Text((i + 1).toString())),
+                    DataCell(FormFieldTable(
+                      value: e.sku,
+                      hinText: "SKU",
+                      onChanged: (val) => e.sku = val,
+                    )),
+                    DataCell(FormFieldTable(
+                      value: e.name,
+                      hinText: "Name",
+                      onChanged: (val) => e.name = val,
+                    )),
+                    DataCell(FormFieldTable(
+                      value: _currency.format(e.qty),
+                      hinText: "Qty Convertion",
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                        CurrencyInputFormatter(),
+                      ],
+                      onChanged: (val) {
+                        int value = (val == "")
+                            ? int.parse("0")
+                            : int.parse(val.replaceAll(",", ""));
+                        e.qty = value < 1 ? 0 : value;
+                      },
+                    )),
+                    DataCell(FormFieldTable(
+                      value: _currency.format(e.salePrice),
+                      hinText: "Sale Price",
+                      onChanged: (val) {
+                        double value = (val == "")
+                            ? double.parse("0")
+                            : double.parse(val.replaceAll(",", ""));
+                        e.salePrice = value < 1 ? 0 : value;
+                      },
+                    )),
+                    DataCell(
+                        Text(
+                          e.uom?.name ?? "--Select UOM--",
+                          textAlign: TextAlign.center,
+                        ),
+                        showEditIcon: true, onTap: () {
+                      Common.modalBootstrapt(context, BootstrapModalSize.small,
+                          dismissble: false,
+                          title: "Edit UOM",
+                          showSaveButton: false,
+                          content: CustomDropDown<Uom>(
+                            title: "Uom",
+                            showTitle: false,
+                            items: uoms,
+                            itemAsString: (item) => item.name ?? "",
+                            onChanged: (uom) {
+                              e.uom = uom!;
+                              setState(() {});
+                            },
+                            selectedItem: e.uom,
+                          ));
+                    }),
+                    DataCell(
+                      InkWell(
+                        child: const Text(
+                          "Remove",
+                          style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.indigo,
+                          ),
+                        ),
+                        onTap: () {
+                          convertions.removeWhere((f) => f == e);
+                          setState(() {});
+                        },
+                      ),
+                    ),
+                  ]));
+            })
+            .values
+            .toList());
   }
 
   picPicture() async {
