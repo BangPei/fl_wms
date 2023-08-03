@@ -333,11 +333,11 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                                             horizontal: 8),
                                         onPressed: () {
                                           ItemConvertion item = ItemConvertion(
-                                            name: "Test 1",
-                                            qty: 2,
-                                            salePrice: 20000,
+                                            name: null,
+                                            qty: 1,
+                                            salePrice: 0,
                                             uom: null,
-                                            sku: "123456789",
+                                            sku: null,
                                           );
                                           convertions.add(item);
                                           setState(() {});
@@ -360,6 +360,7 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                                   product = Product.fromJson(formgroup.value);
                                   product.brand = brand;
                                   product.category = category;
+                                  product.items = convertions;
                                   if (widget.id == null) {
                                     context
                                         .read<ProductBloc>()
@@ -421,6 +422,7 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                     DataCell(FormFieldTable(
                       value: _currency.format(e.qty),
                       hinText: "Qty Convertion",
+                      textAlign: TextAlign.right,
                       inputFormatters: [
                         FilteringTextInputFormatter.digitsOnly,
                         CurrencyInputFormatter(),
@@ -435,6 +437,7 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                     DataCell(FormFieldTable(
                       value: _currency.format(e.salePrice),
                       hinText: "Sale Price",
+                      textAlign: TextAlign.right,
                       onChanged: (val) {
                         double value = (val == "")
                             ? double.parse("0")
