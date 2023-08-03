@@ -110,8 +110,8 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
             Common.modalSuccess(context);
           },
         );
-        // context.goNamed("product");
-        // Navigator.pop(context);
+        context.goNamed("product");
+        Navigator.pop(context);
       }
     } catch (e) {
       emit(ProductErrorState());
