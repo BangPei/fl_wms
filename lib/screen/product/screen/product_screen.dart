@@ -103,14 +103,8 @@ class _ProductScreenState extends State<ProductScreen> {
                             });
                           },
                         ),
-                        ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: state.products.length,
-                          itemBuilder: (ctx, i) {
-                            Product product = state.products[i];
-                            return ListViewProduct(product: product);
-                          },
-                        ),
+                        const ProductHeader(),
+                        itemWidget(state.products),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: SizedBox(
@@ -149,6 +143,33 @@ class _ProductScreenState extends State<ProductScreen> {
         ),
       ),
     );
+  }
+
+  Widget itemWidget(List<Product> products) {
+    if (products.isEmpty) {
+      return Card(
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 15),
+          child: const Center(
+            child: Text(
+              "No Data Found !",
+              style: TextStyle(
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        ),
+      );
+    } else {
+      return ListView.builder(
+        shrinkWrap: true,
+        itemCount: products.length,
+        itemBuilder: (ctx, i) {
+          Product product = products[i];
+          return ListViewProduct(product: product);
+        },
+      );
+    }
   }
 
   int getPage(DataTableModel data) {
@@ -224,6 +245,96 @@ class FilterRow extends StatelessWidget {
                 ),
               ),
             )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class ProductHeader extends StatelessWidget {
+  const ProductHeader({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    TextStyle _style = const TextStyle(fontWeight: FontWeight.w600);
+    return Card(
+      color: const Color.fromARGB(255, 243, 241, 241),
+      child: Padding(
+        padding: const EdgeInsets.all(5.0),
+        child: ResponsiveGridRow(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ResponsiveGridCol(
+              lg: 4,
+              md: 4,
+              sm: 12,
+              xl: 4,
+              xs: 12,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 5.0),
+                child: Text(
+                  "Product",
+                  style: _style,
+                ),
+              ),
+            ),
+            ResponsiveGridCol(
+              lg: 2,
+              md: 2,
+              sm: 12,
+              xl: 2,
+              xs: 12,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 5.0),
+                child: Text(
+                  "Brand",
+                  style: _style,
+                ),
+              ),
+            ),
+            ResponsiveGridCol(
+              lg: 2,
+              md: 2,
+              sm: 12,
+              xl: 2,
+              xs: 12,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 5.0),
+                child: Text(
+                  "Category",
+                  style: _style,
+                ),
+              ),
+            ),
+            ResponsiveGridCol(
+              lg: 2,
+              md: 2,
+              sm: 12,
+              xl: 2,
+              xs: 12,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 5.0),
+                child: Text(
+                  "Status",
+                  style: _style,
+                ),
+              ),
+            ),
+            ResponsiveGridCol(
+              lg: 2,
+              md: 2,
+              sm: 12,
+              xl: 2,
+              xs: 12,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 5.0),
+                child: Text(
+                  "Action",
+                  style: _style,
+                ),
+              ),
+            ),
           ],
         ),
       ),
@@ -354,20 +465,18 @@ class ListViewProduct extends StatelessWidget {
                   xs: 12,
                   child: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 10),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        const Text(
-                          "Brand",
-                          style: TextStyle(fontWeight: FontWeight.w500),
-                        ),
-                        const SizedBox(height: 3),
-                        Text(
-                          product?.brand?.name ?? "Brand Name",
-                          style: style,
-                        ),
-                      ],
-                    ),
+                    child: Text(product?.brand?.name ?? "Brand Name"),
+                  ),
+                ),
+                ResponsiveGridCol(
+                  lg: 2,
+                  md: 2,
+                  sm: 12,
+                  xl: 2,
+                  xs: 12,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    child: Text(product?.category?.name ?? "Category Name"),
                   ),
                 ),
                 ResponsiveGridCol(
@@ -379,38 +488,8 @@ class ListViewProduct extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 10),
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
-                          "Category",
-                          style: TextStyle(fontWeight: FontWeight.w500),
-                        ),
-                        const SizedBox(height: 3),
-                        Text(
-                          product?.category?.name ?? "Category Name",
-                          textAlign: TextAlign.center,
-                          style: style,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                ResponsiveGridCol(
-                  lg: 2,
-                  md: 2,
-                  sm: 12,
-                  xl: 2,
-                  xs: 12,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        const Text(
-                          "Status",
-                          style: TextStyle(fontWeight: FontWeight.w500),
-                        ),
-                        const SizedBox(height: 3),
                         badges.Badge(
                           badgeContent: Padding(
                             padding: const EdgeInsets.all(2.0),
@@ -503,7 +582,79 @@ class ListViewProduct extends StatelessWidget {
                           ),
                           trailing: const Icon(Icons.arrow_drop_down),
                           children: (product?.items ?? []).map((item) {
-                            return Text(item.sku ?? "");
+                            double width = MediaQuery.of(context).size.width;
+                            return Padding(
+                              padding: const EdgeInsets.only(top: 3),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
+                                      children: [
+                                        Text(item.sku ?? ""),
+                                        Text(
+                                          item.name ?? "",
+                                          style: const TextStyle(
+                                            fontSize: 10,
+                                            fontWeight: FontWeight.w400,
+                                            fontStyle: FontStyle.italic,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Container(
+                                    width: width * 0.5,
+                                    padding: const EdgeInsets.only(left: 5),
+                                    child: Row(
+                                      children: [
+                                        Container(
+                                          width: 150,
+                                          height: 40,
+                                          padding: const EdgeInsets.all(3.0),
+                                          child: TextFormField(
+                                            initialValue: item.qty.toString(),
+                                            decoration:
+                                                const BootstrapInputDecoration(
+                                              labelText: "Convertion",
+                                              hintText: "Convertion",
+                                            ),
+                                          ),
+                                        ),
+                                        Container(
+                                          width: 150,
+                                          height: 40,
+                                          padding: const EdgeInsets.all(3.0),
+                                          child: TextFormField(
+                                            initialValue:
+                                                item.salePrice.toString(),
+                                            decoration:
+                                                const BootstrapInputDecoration(
+                                              labelText: "Sale Price",
+                                              hintText: "Sale Price",
+                                            ),
+                                          ),
+                                        ),
+                                        Container(
+                                          width: 150,
+                                          height: 40,
+                                          padding: const EdgeInsets.all(3.0),
+                                          child: TextFormField(
+                                            initialValue: item.uom?.name ?? "",
+                                            decoration:
+                                                const BootstrapInputDecoration(
+                                              labelText: "Uom",
+                                              hintText: "Uom",
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                ],
+                              ),
+                            );
                           }).toList(),
                         )
                       ],
