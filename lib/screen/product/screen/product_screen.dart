@@ -257,7 +257,7 @@ class ProductHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    TextStyle _style = const TextStyle(fontWeight: FontWeight.w600);
+    TextStyle style = const TextStyle(fontWeight: FontWeight.w600);
     return Card(
       color: const Color.fromARGB(255, 243, 241, 241),
       child: Padding(
@@ -275,7 +275,7 @@ class ProductHeader extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(vertical: 5.0),
                 child: Text(
                   "Product",
-                  style: _style,
+                  style: style,
                 ),
               ),
             ),
@@ -289,7 +289,7 @@ class ProductHeader extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(vertical: 5.0),
                 child: Text(
                   "Brand",
-                  style: _style,
+                  style: style,
                 ),
               ),
             ),
@@ -303,7 +303,7 @@ class ProductHeader extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(vertical: 5.0),
                 child: Text(
                   "Category",
-                  style: _style,
+                  style: style,
                 ),
               ),
             ),
@@ -317,7 +317,7 @@ class ProductHeader extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(vertical: 5.0),
                 child: Text(
                   "Status",
-                  style: _style,
+                  style: style,
                 ),
               ),
             ),
@@ -331,7 +331,7 @@ class ProductHeader extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(vertical: 5.0),
                 child: Text(
                   "Action",
-                  style: _style,
+                  style: style,
                 ),
               ),
             ),
@@ -575,87 +575,137 @@ class ListViewProduct extends StatelessWidget {
                     child: Column(
                       children: [
                         const Divider(color: Colors.grey),
-                        ExpansionTile(
-                          title: Text(
-                            "Total Item : ${(product?.items ?? []).length.toString()}",
-                            style: const TextStyle(fontSize: 13),
-                          ),
-                          trailing: const Icon(Icons.arrow_drop_down),
-                          children: (product?.items ?? []).map((item) {
-                            double width = MediaQuery.of(context).size.width;
-                            return Padding(
-                              padding: const EdgeInsets.only(top: 3),
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.end,
-                                      children: [
-                                        Text(item.sku ?? ""),
-                                        Text(
-                                          item.name ?? "",
-                                          style: const TextStyle(
-                                            fontSize: 10,
-                                            fontWeight: FontWeight.w400,
-                                            fontStyle: FontStyle.italic,
+                        Theme(
+                          data: Theme.of(context)
+                              .copyWith(dividerColor: Colors.transparent),
+                          child: ExpansionTile(
+                            title: Text(
+                              "Total Item : ${(product?.items ?? []).length.toString()}",
+                              style: const TextStyle(fontSize: 13),
+                            ),
+                            trailing: const Icon(Icons.arrow_drop_down),
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                          width: 2,
+                                          color: Colors.indigo.withOpacity(0.8),
+                                        ),
+                                        borderRadius: const BorderRadius.all(
+                                          Radius.circular(10),
+                                        ),
+                                      ),
+                                      child: TextButton(
+                                        onPressed: () => print("ok"),
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 5, horizontal: 10.0),
+                                          child: Text(
+                                            "Save All",
+                                            style: TextStyle(
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.indigo
+                                                  .withOpacity(0.8),
+                                            ),
                                           ),
                                         ),
-                                      ],
+                                      ),
                                     ),
-                                  ),
-                                  Container(
-                                    width: width * 0.5,
-                                    padding: const EdgeInsets.only(left: 5),
+                                  ],
+                                ),
+                              ),
+                              Column(
+                                children: (product?.items ?? []).map((item) {
+                                  double width =
+                                      MediaQuery.of(context).size.width;
+                                  return Padding(
+                                    padding: const EdgeInsets.only(top: 3),
                                     child: Row(
                                       children: [
-                                        Container(
-                                          width: 150,
-                                          height: 40,
-                                          padding: const EdgeInsets.all(3.0),
-                                          child: TextFormField(
-                                            initialValue: item.qty.toString(),
-                                            decoration:
-                                                const BootstrapInputDecoration(
-                                              labelText: "Convertion",
-                                              hintText: "Convertion",
-                                            ),
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.end,
+                                            children: [
+                                              Text(item.sku ?? ""),
+                                              Text(
+                                                item.name ?? "",
+                                                style: const TextStyle(
+                                                  fontSize: 10,
+                                                  fontWeight: FontWeight.w400,
+                                                  fontStyle: FontStyle.italic,
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         ),
                                         Container(
-                                          width: 150,
-                                          height: 40,
-                                          padding: const EdgeInsets.all(3.0),
-                                          child: TextFormField(
-                                            initialValue:
-                                                item.salePrice.toString(),
-                                            decoration:
-                                                const BootstrapInputDecoration(
-                                              labelText: "Sale Price",
-                                              hintText: "Sale Price",
-                                            ),
+                                          width: width * 0.5,
+                                          padding:
+                                              const EdgeInsets.only(left: 5),
+                                          child: Row(
+                                            children: [
+                                              Container(
+                                                width: 150,
+                                                height: 40,
+                                                padding:
+                                                    const EdgeInsets.all(3.0),
+                                                child: TextFormField(
+                                                  initialValue:
+                                                      item.qty.toString(),
+                                                  decoration:
+                                                      const BootstrapInputDecoration(
+                                                    labelText: "Convertion",
+                                                    hintText: "Convertion",
+                                                  ),
+                                                ),
+                                              ),
+                                              Container(
+                                                width: 150,
+                                                height: 40,
+                                                padding:
+                                                    const EdgeInsets.all(3.0),
+                                                child: TextFormField(
+                                                  initialValue:
+                                                      item.salePrice.toString(),
+                                                  decoration:
+                                                      const BootstrapInputDecoration(
+                                                    labelText: "Sale Price",
+                                                    hintText: "Sale Price",
+                                                  ),
+                                                ),
+                                              ),
+                                              Container(
+                                                width: 150,
+                                                height: 40,
+                                                padding:
+                                                    const EdgeInsets.all(3.0),
+                                                child: TextFormField(
+                                                  initialValue:
+                                                      item.uom?.name ?? "",
+                                                  decoration:
+                                                      const BootstrapInputDecoration(
+                                                    labelText: "Uom",
+                                                    hintText: "Uom",
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
                                           ),
-                                        ),
-                                        Container(
-                                          width: 150,
-                                          height: 40,
-                                          padding: const EdgeInsets.all(3.0),
-                                          child: TextFormField(
-                                            initialValue: item.uom?.name ?? "",
-                                            decoration:
-                                                const BootstrapInputDecoration(
-                                              labelText: "Uom",
-                                              hintText: "Uom",
-                                            ),
-                                          ),
-                                        ),
+                                        )
                                       ],
                                     ),
-                                  )
-                                ],
+                                  );
+                                }).toList(),
                               ),
-                            );
-                          }).toList(),
+                            ],
+                          ),
                         )
                       ],
                     ),
